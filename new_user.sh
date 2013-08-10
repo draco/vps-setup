@@ -142,7 +142,8 @@ sudo su - $username -c "cd public_html/$domain;
 wp core download;
 wp core config --dbname=$db_name --dbuser=$db_user --dbpass=$db_pass;
 wp core multisite-install --url=$wp_url --title=\"$wp_title\" --admin_name=$wp_admin --admin_password=$wp_password --admin_email=$wp_email;
-wp plugin install nginx-helper --force --activate
+wp plugin install nginx-helper --force
+wp plugin activate nginx-helper -network
 touch /home/$username/public_html/$domain/wp-content/uploads/nginx-helper/map.conf;
 wp eval '$wp_bootstrap' "
 
