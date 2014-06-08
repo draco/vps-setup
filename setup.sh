@@ -91,13 +91,6 @@ sudo rm /etc/php5/fpm/pool.d/www.conf
 sudo service php5-fpm stop
 sudo service php5-fpm start
 
-###----------------------------------------###
-###  Install WP-CLI
-###----------------------------------------###
-
-curl http://wp-cli.org/installer.sh > installer.sh
-sudo INSTALL_DIR='/usr/share/wp-cli' bash installer.sh
-sudo ln -s /usr/share/wp-cli/bin/wp /usr/bin/wp
 
 #Output details for admin
 echo "Root MySQL Password: "
