@@ -18,7 +18,6 @@ function randstr {
 
 read -p "Username to setup: " username
 read -p "Domain for this site: " domain
-read -s -p "MySQL root password: " mysql_root
 
 ###----------------------------------------###
 ###  Confirm Inputs
@@ -28,7 +27,6 @@ read -s -p "MySQL root password: " mysql_root
 echo "You have entered:"
 echo "Username: $username"
 echo "Domain: $domain"
-echo "MySQL root password: [hidden - hope you entered it right...]"
 echo "Are you 100% sure this is correct? [y/n]"
 read confirmgo
 
@@ -58,8 +56,8 @@ mkdir -p logs/nginx;
 db_user="${username:0:16}" #limit to first 16 characters - this will need to strip out special characters that are allowed in usernames like "-"
 db_pass=$(randstr 36)
 
-mysql -u root --password=$mysql_root -e "CREATE USER '$db_user'@'localhost' IDENTIFIED BY '$db_pass';"
-mysql -u root --password=$mysql_root -e "FLUSH PRIVILEGES;"
+mysql --login-path=root --execute="CREATE USER '$db_user'@'localhost' IDENTIFIED BY '$db_pass';"
+mysql --login-path=root --execute="FLUSH PRIVILEGES;"
 
 ###----------------------------------------###
 ###  Setup PHP Pool
@@ -99,8 +97,8 @@ sudo /etc/init.d/nginx restart
 
 db_name=$db_user
 
-mysql -u root --password=$mysql_root -e "CREATE DATABASE $db_name;GRANT ALL PRIVILEGES ON $db_name.* TO '$db_user'@'localhost' IDENTIFIED BY '$db_pass';"
-mysql -u root --password=$mysql_root -e "FLUSH PRIVILEGES;"
+mysql --login-path=root --execute="CREATE DATABASE $db_name;GRANT ALL PRIVILEGES ON $db_name.* TO '$db_user'@'localhost' IDENTIFIED BY '$db_pass';"
+mysql --login-path=root --execute="FLUSH PRIVILEGES;"
 
 ###----------------------------------------###
 ###  Output details for admin
