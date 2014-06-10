@@ -93,9 +93,6 @@ sudo cp $SCRIPT_PATH/config/php/php-fpm.conf /etc/php5/fpm/php-fpm.conf
 #remove default www pool
 sudo rm /etc/php5/fpm/pool.d/www.conf
 
-#Restart service
-# sudo /etc/init.d/php5-fpm restart
-
 #Output details for admin
 echo "Root MySQL Password: "
 echo ${MYSQL_ROOT_PASSWORD}
