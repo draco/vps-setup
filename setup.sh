@@ -11,7 +11,7 @@ SCRIPT_PATH=$( cd $(dirname $0) ; pwd -P )
 sudo apt-get update
 
 # Install any general & required packages
-sudo apt-get install git curl python-software-properties aptitude --quiet --assume-yes
+sudo apt-get install expect git curl python-software-properties aptitude --quiet --assume-yes
 
 ### Add DotDeb repository from http://www.dotdeb.org/instructions/
 sudo cp $SCRIPT_PATH/config/sources/dotdeb.list /etc/apt/sources.list.d/dotdeb.list
