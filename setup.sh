@@ -97,5 +97,8 @@ sudo rm /etc/php5/fpm/pool.d/www.conf
 echo "Root MySQL Password: "
 echo ${MYSQL_ROOT_PASSWORD}
 
+###----------------------------------------###
+### Clean up and restart services
+###----------------------------------------###
 cd ~
 sudo rm rootpassword.sql
