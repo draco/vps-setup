@@ -2,4 +2,4 @@
 innodb=OFF
 skip-innodb
 default-storage-engine=myisam
-default-tmp-storage-engine=myisam
+default_tmp_storage_engine=myisam
