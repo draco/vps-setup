@@ -2,7 +2,7 @@
 ###  EDIT OPTIONS BELOW
 ###----------------------------------------###
 
-SYSTEM_UPDATE="NO"
+SYSTEM_UPDATE="YES"
 SCRIPT_PATH=$( cd $(dirname $0) ; pwd -P )
 
 ###----------------------------------------###
