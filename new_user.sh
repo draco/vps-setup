@@ -7,6 +7,8 @@
 ###  Functions
 ###----------------------------------------###
 
+SCRIPT_PATH=$( cd $(dirname $0) ; pwd -P )
+
 #Generates a random string of a given length -> $ randstr 16
 function randstr {
     echo $(perl -le 'print map { (a..z,A..Z,0..9)[rand 62] } 0..pop' $1)
@@ -63,7 +65,7 @@ mysql --login-path=root --execute="FLUSH PRIVILEGES;"
 ###  Setup PHP Pool
 ###----------------------------------------###
 
-sudo cp config/php/user-pool.conf /etc/php5/fpm/pool.d/$username.conf
+sudo cp $SCRIPT_PATH/config/php/user-pool.conf /etc/php5/fpm/pool.d/$username.conf
 sudo sed -i "s/USERNAME/$username/g" /etc/php5/fpm/pool.d/$username.conf
 
 sudo /etc/init.d/php5-fpm restart
@@ -79,7 +81,7 @@ sudo /etc/init.d/php5-fpm restart
 sudo su - $username -c "cd ~/www && mkdir -p $domain/public_html;
 echo 'It works!' > $domain/public_html/index.html"
 
-sudo cp config/nginx/user.conf /etc/nginx/sites-available/$username-$domain.conf
+sudo cp $SCRIPT_PATH/config/nginx/user.conf /etc/nginx/sites-available/$username-$domain.conf
 sudo sed -i "s/USERNAME/$username/g" /etc/nginx/sites-available/$username-$domain.conf
 sudo sed -i "s/DOMAIN/$domain/g" /etc/nginx/sites-available/$username-$domain.conf
 
