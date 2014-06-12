@@ -48,18 +48,14 @@ sudo cp $SCRIPT_PATH/config/mysql/custom.cnf /etc/mysql/conf.d/custom.cnf
 # Set MySQL root password
 cd ~
 MYSQL_ROOT_PASSWORD=$(perl -le 'print map { (a..z,A..Z,0..9)[rand 62] } 0..pop' 36)
-sudo /etc/init.d/mysql stop
-echo "UPDATE mysql.user SET Password=PASSWORD('${MYSQL_ROOT_PASSWORD}') WHERE User='root';" > rootpassword.sql
-echo "FLUSH PRIVILEGES;" >> rootpassword.sql
-sudo mysqld_safe --init-file=${HOME}/rootpassword.sql &
+mysqladmin -u root password $MYSQL_ROOT_PASSWORD
 expect -c "
 spawn mysql_config_editor set --login-path=root --host=localhost --user=root --password
 expect -nocase \"Enter password:\" {send \"$MYSQL_ROOT_PASSWORD\r\"; interact}
 "
 cd -
 
-sudo /etc/init.d/mysql stop
-sudo /etc/init.d/mysql start
+sudo /etc/init.d/mysql restart
 
 ###----------------------------------------###
 ###  Configure Nginx
@@ -101,4 +97,3 @@ echo ${MYSQL_ROOT_PASSWORD}
 ### Clean up and restart services
 ###----------------------------------------###
 cd ~
-sudo rm rootpassword.sql
