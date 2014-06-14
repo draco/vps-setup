@@ -14,9 +14,9 @@ This script will by default:
 - Install `ssmtp` (and `apticron`)
 - Install `nginx`, `mysql`, `php5-fpm`
 
-## `new_user.sh`
+## `add_user.sh`
 This script will:
-- Create a new user
+- Create a new user (and add it to `mail` group to use sSMTP)
 - Setup a PHP pool (each user runs php separately for security)
 - Create a MySQL User and Database
 - Create an nginx server block for their domain
