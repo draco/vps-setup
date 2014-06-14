@@ -84,6 +84,8 @@ if [ "$use_sstmp" = "y" ] ; then
   # Add root to mail group first.
   sudo chown root:mail /etc/ssmtp/ssmtp.conf
   sudo chmod 640 /etc/ssmtp/ssmtp.conf
+
+  cat $SCRIPT_PATH/test_mail.txt | mail -s "Email test from VPS" $ssmtp_email
 fi
 
 ###----------------------------------------###
