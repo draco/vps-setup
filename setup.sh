@@ -107,7 +107,7 @@ sudo cp $SCRIPT_PATH/config/php/php-fpm.conf /etc/php5/fpm/php-fpm.conf
 # If sSMTP is installed, modify the php.ini to sendmail using sSMTP.
 if [ "$use_sstmp" = "y" ] ; then
   sudo sed --in-place=.old \
-    's,^;sendmail_path =,sendmail_path = /usr/bin/ssmtp -t,g' \
+    's,^;sendmail_path =,sendmail_path = /usr/sbin/ssmtp -t,g' \
     /etc/php5/fpm/php.ini
 fi
 
