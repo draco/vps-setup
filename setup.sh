@@ -14,22 +14,22 @@ use_memcached="y"
 ###----------------------------------------###
 
 SCRIPT_PATH=$( cd $(dirname $0) ; pwd -P )
-
-if [ -z "$use_dotdeb" ]; then
-  read -p "Use DotDeb? (yN) " use_dotdeb
-fi
 readonly SCRIPT_PATH
 
 if [ -z "$update_system" ]; then
   read -p "Update system? (yN) " update_system
 fi
 
-if [ -z "$use_sstmp" ]; then
-  read -p "Use sSMTP? (yN) " use_sstmp
+if [ -z "$use_dotdeb" ]; then
+  read -p "Use DotDeb (for nginx/php5/mysql)? (yN) " use_dotdeb
 fi
 
 if [ -z "$use_memcached" ]; then
-  read -p "Use Memcached? (yN) " use_memcached
+  read -p "Use memcached? (yN) " use_memcached
+fi
+
+if [ -z "$use_sstmp" ]; then
+  read -p "Use sSMTP (will also install apticron)? (yN) " use_sstmp
 fi
 
 if [ "$use_sstmp" = "y" ] ; then
