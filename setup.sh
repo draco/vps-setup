@@ -38,7 +38,14 @@ echo "Starting install..."
 sudo apt-get update
 
 # Install any general & required packages
-sudo apt-get install expect git curl python-software-properties aptitude --quiet --assume-yes
+sudo apt-get \
+  install \
+  expect \
+  git \
+  curl \
+  aptitude \
+  python-software-properties \
+  --quiet --assume-yes
 
 ### Add DotDeb repository from http://www.dotdeb.org/instructions/
 sudo cp $SCRIPT_PATH/config/sources/dotdeb.list /etc/apt/sources.list.d/dotdeb.list
@@ -74,6 +81,16 @@ sudo aptitude install php5-common php5-mysql php5-curl php5-gd php5-cli php5-fpm
 ###----------------------------------------###
 ###  Configure MySQL
 ###----------------------------------------###
+sudo aptitude install \
+  php5-common \
+  php5-mysql \
+  php5-curl \
+  php5-gd \
+  php5-cli \
+  php5-fpm \
+  php5-dev \
+  php5-mcrypt \
+  --quiet --assume-yes
 
 sudo cp $SCRIPT_PATH/config/mysql/custom.cnf /etc/mysql/conf.d/custom.cnf
 
