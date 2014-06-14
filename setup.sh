@@ -85,7 +85,7 @@ if [ "$use_sstmp" = "y" ] ; then
   sudo chown root:mail /etc/ssmtp/ssmtp.conf
   sudo chmod 640 /etc/ssmtp/ssmtp.conf
 
-  cat $SCRIPT_PATH/test_mail.txt | mail -s "Email test from VPS" $ssmtp_email
+  cat $SCRIPT_PATH/motd.txt | mail -s "Email test from VPS" $ssmtp_email
 fi
 
 ###----------------------------------------###
