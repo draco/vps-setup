@@ -108,7 +108,7 @@ sudo cp $SCRIPT_PATH/config/php/php-fpm.conf /etc/php5/fpm/php-fpm.conf
 # If sSMTP is installed, modify the php.ini to sendmail using sSMTP.
 if [ "$use_sstmp" = "y" ] ; then
   sudo sed --in-place=.old \
-    's,;sendmail_path =,sendmail_path = /usr/bin/ssmtp -t,g' \
+    's,^;sendmail_path =,sendmail_path = /usr/bin/ssmtp -t,g' \
     /etc/php5/fpm/php.ini
 fi
 
@@ -150,7 +150,9 @@ fi
 if [ "$use_sstmp" = "y" ]; then
   echo "Installing apticron because sSMTP is installed..."
   sudo aptitude install apticron --quiet --assume-yes
-  sudo sed --in-place=.old 's/EMAIL="root"/EMAIL="'$ssmtp_email'"/g' /etc/apticron/apticron.conf
+  sudo sed --in-place=.old \
+    --expression='s/^EMAIL="root"/EMAIL="'$ssmtp_email'"/g' \
+    /etc/apticron/apticron.conf
 fi
 
 ###----------------------------------------###
