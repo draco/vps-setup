@@ -7,6 +7,7 @@
 update_system="n"
 use_dotdeb="y"
 use_sstmp="y"
+use_memcached="y"
 
 ###----------------------------------------###
 ### DO NOT EDIT OPTIONS BELOW
@@ -24,6 +25,10 @@ fi
 
 if [ -z "$use_sstmp" ]; then
   read -p "Use sSMTP? (yN) " use_sstmp
+fi
+
+if [ -z "$use_memcached" ]; then
+  read -p "Use Memcached? (yN) " use_memcached
 fi
 
 if [ "$use_sstmp" = "y" ] ; then
@@ -121,6 +126,13 @@ sudo cp $SCRIPT_PATH/config/nginx/caches.conf /etc/nginx/conf.d/caches.conf
 
 #Restart service
 sudo /etc/init.d/nginx restart
+
+###----------------------------------------###
+###  Install Memcached
+###----------------------------------------###
+if [ "$use_memcached" = "y" ]; then
+  sudo aptitude install memcached
+fi
 
 ###----------------------------------------###
 ###  Install & Configure MySQL
