@@ -63,8 +63,6 @@ fi
 ###  Install Services
 ###----------------------------------------###
 
-#openssh server
-sudo aptitude install openssh-server
 
 #nginx
 sudo aptitude install nginx --quiet --assume-yes
