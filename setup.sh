@@ -46,8 +46,7 @@ echo "Starting installation..."
 sudo apt-get update
 
 # Install any general & required packages
-sudo apt-get \
-  install \
+sudo apt-get install \
   expect \
   git \
   curl \
