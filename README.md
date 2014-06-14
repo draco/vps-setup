@@ -1,10 +1,11 @@
-# Linux
+# Important
 - Only ever tested on Debian 7.5.
+- This script assumes you are running it on a *new* server.
 
 # Scripts available
 
-`setup.sh`
-**Only run this on a new server**.
+## `setup.sh`
+**NOTE: Only run this on a new server**.
 
 This script will by default:
 - Add DotDeb repository (for nginx, MySQL and php5-fpm)
@@ -13,7 +14,7 @@ This script will by default:
 - Install `ssmtp` (and `apticron`)
 - Install `nginx`, `mysql`, `php5-fpm`
 
-`new_user.sh`
+## `new_user.sh`
 This script will:
 - Create a new user
 - Setup a PHP pool (each user runs php separately for security)
