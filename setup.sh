@@ -37,7 +37,7 @@ if [ "$use_sstmp" = "y" ] ; then
   read -s -p "GMail password: " ssmtp_pass
 fi
 
-echo "Starting install..."
+echo "Starting installation..."
 
 ###----------------------------------------###
 ###  Update and upgrade the OS
