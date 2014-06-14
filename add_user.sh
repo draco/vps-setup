@@ -15,6 +15,7 @@ function randstr {
 
 read -p "Username to setup: " username
 read -p "Domain for this site: " domain
+read -p "Allow use of sSMTP?: (yN) " allow_smtp
 
 ###----------------------------------------###
 ###  Confirm Inputs
@@ -24,7 +25,8 @@ read -p "Domain for this site: " domain
 echo "You have entered:"
 echo "Username: $username"
 echo "Domain: $domain"
-echo "Are you 100% sure this is correct? [y/n]"
+echo "Use sSMTP: $allow_smtp"
+echo "Are you 100% sure this is correct? (yN)"
 read confirmgo
 
 if [ "$confirmgo" != "y" ] ; then
@@ -100,8 +102,10 @@ mysql --login-path=root --execute="FLUSH PRIVILEGES;"
 ###----------------------------------------###
 ### Allow to use sSMTP
 ###----------------------------------------###
-echo "Adding $username to mail group..."
-sudo usermod --append --groups mail $username
+if [ "$allow_smtp" = "y" ]; then
+  echo "Adding $username to mail group..."
+  sudo usermod --append --groups mail $username
+fi
 
 ###----------------------------------------###
 ###  Output details for admin
