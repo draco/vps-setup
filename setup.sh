@@ -2,6 +2,8 @@
 ###  EDIT OPTIONS BELOW
 ###----------------------------------------###
 
+# Comment these if you don't want defaults for
+# each installation.
 update_system="n"
 use_dotdeb="y"
 use_sstmp="y"
