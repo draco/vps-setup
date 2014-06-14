@@ -61,17 +61,30 @@ fi
 
 ###----------------------------------------###
 ###  Install Services
+###  Install & Configure sSMTP
 ###----------------------------------------###
 
+if [ "$use_sstmp" = "y" ] ; then
+  # For sending email
+  # - Will remove exim4 and its dependencies.
+  sudo aptitude install ssmtp --quiet --assume-yes
 
 #nginx
 sudo aptitude install nginx --quiet --assume-yes
+  sudo mv /etc/ssmtp/ssmtp.conf /etc/ssmtp/ssmtp.conf.old
+  sudo cp $SCRIPT_PATH/config/ssmtp/ssmtp.conf /etc/ssmtp/ssmtp.conf
 
 #mysql
 sudo DEBIAN_FRONTEND=noninteractive aptitude install mysql-server --quiet --assume-yes
+  sudo sed -i "s/USERNAME/$ssmtp_email/g" /etc/ssmtp/ssmtp.conf
+  sudo sed -i "s/PASSWORD/$ssmtp_pass/g" /etc/ssmtp/ssmtp.conf
 
 #php
 sudo aptitude install php5-common php5-mysql php5-curl php5-gd php5-cli php5-fpm php5-dev php5-mcrypt --quiet --assume-yes
+  # Add root to mail group first.
+  sudo chown root:mail /etc/ssmtp/ssmtp.conf
+  sudo chmod 640 /etc/ssmtp/ssmtp.conf
+fi
 
 ###----------------------------------------###
 ###  Configure MySQL
