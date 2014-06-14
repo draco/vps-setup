@@ -3,6 +3,7 @@
 ###----------------------------------------###
 
 SCRIPT_PATH=$( cd $(dirname $0) ; pwd -P )
+readonly SCRIPT_PATH
 
 #Generates a random string of a given length -> $ randstr 16
 function randstr {
