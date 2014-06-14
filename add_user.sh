@@ -1,8 +1,3 @@
-#This will eventually be split into two scripts
-# one to create the user, php pool and database user
-# and one to add a new domain for that user (the first one can add a default/first domain by nesting this script)
-
-
 ###----------------------------------------###
 ###  Functions
 ###----------------------------------------###
