@@ -2,8 +2,35 @@
 ###  EDIT OPTIONS BELOW
 ###----------------------------------------###
 
-SYSTEM_UPDATE="YES"
+update_system="n"
+use_dotdeb="y"
+use_sstmp="y"
+
+###----------------------------------------###
+### DO NOT EDIT OPTIONS BELOW
+###----------------------------------------###
+
 SCRIPT_PATH=$( cd $(dirname $0) ; pwd -P )
+
+if [ -z "$use_dotdeb" ]; then
+  read -p "Use DotDeb? (yN) " use_dotdeb
+fi
+
+if [ -z "$update_system" ]; then
+  read -p "Update system? (yN) " update_system
+fi
+
+if [ -z "$use_sstmp" ]; then
+  read -p "Use sSMTP? (yN) " use_sstmp
+fi
+
+if [ "$use_sstmp" = "y" ] ; then
+  echo "Configuring sSMTP:"
+  read -p "GMail address: " ssmtp_email
+  read -s -p "GMail password: " ssmtp_pass
+fi
+
+echo "Starting install..."
 
 ###----------------------------------------###
 ###  Update and upgrade the OS
@@ -16,10 +43,15 @@ sudo apt-get install expect git curl python-software-properties aptitude --quiet
 ### Add DotDeb repository from http://www.dotdeb.org/instructions/
 sudo cp $SCRIPT_PATH/config/sources/dotdeb.list /etc/apt/sources.list.d/dotdeb.list
 wget --quiet --output-document=- http://www.dotdeb.org/dotdeb.gpg | sudo apt-key add -
+if [ "$use_dotdeb" = "y" ] ; then
+  ### Add DotDeb repository from http://www.dotdeb.org/instructions/
+  sudo cp $SCRIPT_PATH/config/sources/dotdeb.list /etc/apt/sources.list.d/dotdeb.list
+  wget --quiet --output-document=- http://www.dotdeb.org/dotdeb.gpg | sudo apt-key add -
+fi
 
 sudo aptitude update
 
-if [ "$SYSTEM_UPDATE" = "YES" ] ; then
+if [ "$update_system" = "y" ] ; then
   sudo aptitude upgrade --quiet --assume-yes
 fi
 
