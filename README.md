@@ -10,6 +10,7 @@
 Currently this should _not be executed more than once_ on a server.
 
 This script will by default:
+- Set `PermitRootLogin without-password` in `sshd_config`. So remember add a user or setup ssh key for your root account.
 - Add DotDeb repository (for nginx, MySQL and php5-fpm)
 - Install `aptitude`/`git`/`curl`/`python-software-properties`
 - Install `memcached`
