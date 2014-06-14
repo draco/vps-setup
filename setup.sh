@@ -18,6 +18,7 @@ SCRIPT_PATH=$( cd $(dirname $0) ; pwd -P )
 if [ -z "$use_dotdeb" ]; then
   read -p "Use DotDeb? (yN) " use_dotdeb
 fi
+readonly SCRIPT_PATH
 
 if [ -z "$update_system" ]; then
   read -p "Update system? (yN) " update_system
