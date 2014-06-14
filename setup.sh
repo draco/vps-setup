@@ -60,7 +60,6 @@ if [ "$update_system" = "y" ] ; then
 fi
 
 ###----------------------------------------###
-###  Install Services
 ###  Install & Configure sSMTP
 ###----------------------------------------###
 
@@ -69,25 +68,19 @@ if [ "$use_sstmp" = "y" ] ; then
   # - Will remove exim4 and its dependencies.
   sudo aptitude install ssmtp --quiet --assume-yes
 
-#nginx
-sudo aptitude install nginx --quiet --assume-yes
   sudo mv /etc/ssmtp/ssmtp.conf /etc/ssmtp/ssmtp.conf.old
   sudo cp $SCRIPT_PATH/config/ssmtp/ssmtp.conf /etc/ssmtp/ssmtp.conf
 
-#mysql
-sudo DEBIAN_FRONTEND=noninteractive aptitude install mysql-server --quiet --assume-yes
   sudo sed -i "s/USERNAME/$ssmtp_email/g" /etc/ssmtp/ssmtp.conf
   sudo sed -i "s/PASSWORD/$ssmtp_pass/g" /etc/ssmtp/ssmtp.conf
 
-#php
-sudo aptitude install php5-common php5-mysql php5-curl php5-gd php5-cli php5-fpm php5-dev php5-mcrypt --quiet --assume-yes
   # Add root to mail group first.
   sudo chown root:mail /etc/ssmtp/ssmtp.conf
   sudo chmod 640 /etc/ssmtp/ssmtp.conf
 fi
 
 ###----------------------------------------###
-###  Configure MySQL
+### Install &  Configure PHP5/-FPM
 ###----------------------------------------###
 sudo aptitude install \
   php5-common \
@@ -99,6 +92,38 @@ sudo aptitude install \
   php5-dev \
   php5-mcrypt \
   --quiet --assume-yes
+
+echo "Importing PHP-FPM config..."
+sudo mv /etc/php5/fpm/php-fpm.conf /etc/php5/fpm/php-fpm.conf.old
+sudo cp $SCRIPT_PATH/config/php/php-fpm.conf /etc/php5/fpm/php-fpm.conf
+
+#remove default www pool
+sudo rm /etc/php5/fpm/pool.d/www.conf
+
+###----------------------------------------###
+###  Configure Nginx
+###----------------------------------------###
+sudo aptitude install nginx --quiet --assume-yes
+
+#remove default config
+sudo rm /etc/nginx/sites-enabled/default
+
+echo "Importing nginx config..."
+sudo mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.old
+sudo cp $SCRIPT_PATH/config/nginx/nginx.conf /etc/nginx/nginx.conf
+
+echo "Backing up and removing restrictions.conf if it exists..."
+sudo mv /etc/nginx/conf.d/restrictions.conf /etc/nginx/conf.d/restrictions.conf.old
+sudo cp $SCRIPT_PATH/config/nginx/restrictions.conf /etc/nginx/conf.d/restrictions.conf
+sudo cp $SCRIPT_PATH/config/nginx/caches.conf /etc/nginx/conf.d/caches.conf
+
+#Restart service
+sudo /etc/init.d/nginx restart
+
+###----------------------------------------###
+###  Install & Configure MySQL
+###----------------------------------------###
+sudo DEBIAN_FRONTEND=noninteractive aptitude install mysql-server --quiet --assume-yes
 
 sudo cp $SCRIPT_PATH/config/mysql/custom.cnf /etc/mysql/conf.d/custom.cnf
 
@@ -114,39 +139,6 @@ cd -
 
 sudo /etc/init.d/mysql restart
 
-###----------------------------------------###
-###  Configure Nginx
-###----------------------------------------###
-
-#remove default config
-sudo rm /etc/nginx/sites-enabled/default
-
-echo "Importing nginx config"
-sudo mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.old
-sudo cp $SCRIPT_PATH/config/nginx/nginx.conf /etc/nginx/nginx.conf
-
-echo "Backing up and removing restrictions.conf if it already exists"
-sudo mv /etc/nginx/conf.d/restrictions.conf /etc/nginx/conf.d/restrictions.conf.old
-sudo rm /etc/nginx/conf.d/restrictions.conf
-sudo cp $SCRIPT_PATH/config/nginx/restrictions.conf /etc/nginx/conf.d/restrictions.conf
-sudo cp $SCRIPT_PATH/config/nginx/caches.conf /etc/nginx/conf.d/caches.conf
-
-#Restart service
-sudo /etc/init.d/nginx restart
-
-###----------------------------------------###
-###  Configure PHP-FPM
-###----------------------------------------###
-
-echo "Importing PHP-FPM config"
-sudo mv /etc/php5/fpm/php-fpm.conf /etc/php5/fpm/php-fpm.conf.old
-sudo rm /etc/php5/fpm/php-fpm.conf
-sudo cp $SCRIPT_PATH/config/php/php-fpm.conf /etc/php5/fpm/php-fpm.conf
-
-#remove default www pool
-sudo rm /etc/php5/fpm/pool.d/www.conf
-
-#Output details for admin
 echo "Root MySQL Password: "
 echo ${MYSQL_ROOT_PASSWORD}
 
