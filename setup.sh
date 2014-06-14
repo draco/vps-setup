@@ -67,6 +67,14 @@ if [ "$update_system" = "y" ] ; then
 fi
 
 ###----------------------------------------###
+###  Install & Configure OpenSSH-Server
+###----------------------------------------###
+sudo aptitude install openssh-server --quiet --assume-yes
+sudo sed --in-place=.old \
+  --expression='s/^PermitRootLogin yes/PermitRootLogin without-password/g' \
+  /etc/ssh/sshd_config
+
+###----------------------------------------###
 ###  Install & Configure sSMTP
 ###----------------------------------------###
 
