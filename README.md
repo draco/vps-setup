@@ -7,6 +7,8 @@
 ## `setup.sh`
 **NOTE: Only run this on a new server**.
 
+Currently this should _not be executed more than once_ on a server.
+
 This script will by default:
 - Add DotDeb repository (for nginx, MySQL and php5-fpm)
 - Install `aptitude`/`git`/`curl`/`python-software-properties`
