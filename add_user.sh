@@ -103,6 +103,12 @@ mysql --login-path=root --execute="CREATE DATABASE $db_name;GRANT ALL PRIVILEGES
 mysql --login-path=root --execute="FLUSH PRIVILEGES;"
 
 ###----------------------------------------###
+### Allow to use sSMTP
+###----------------------------------------###
+echo "Adding $username to mail group..."
+sudo usermod --append --groups mail $username
+
+###----------------------------------------###
 ###  Output details for admin
 ###----------------------------------------###
 
