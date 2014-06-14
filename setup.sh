@@ -140,7 +140,7 @@ sudo /etc/init.d/nginx restart
 ###  Install Memcached
 ###----------------------------------------###
 if [ "$use_memcached" = "y" ]; then
-  sudo aptitude install memcached
+  sudo aptitude install memcached --quiet --assume-yes
 fi
 
 ###----------------------------------------###
