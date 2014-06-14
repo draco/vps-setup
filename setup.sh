@@ -44,15 +44,7 @@ echo "Starting installation..."
 ###  Update and upgrade the OS
 ###----------------------------------------###
 sudo apt-get update
-
-# Install any general & required packages
-sudo apt-get install \
-  expect \
-  git \
-  curl \
-  aptitude \
-  python-software-properties \
-  --quiet --assume-yes
+sudo apt-get install aptitude python-software-properties --quiet --assume-yes
 
 if [ "$use_dotdeb" = "y" ] ; then
   ### Add DotDeb repository from http://www.dotdeb.org/instructions/
@@ -61,6 +53,7 @@ if [ "$use_dotdeb" = "y" ] ; then
 fi
 
 sudo aptitude update
+sudo aptitude install expect git curl  --quiet --assume-yes
 
 if [ "$update_system" = "y" ] ; then
   sudo aptitude upgrade --quiet --assume-yes
