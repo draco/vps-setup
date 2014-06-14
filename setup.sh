@@ -105,13 +105,16 @@ echo "Importing PHP-FPM config..."
 sudo mv /etc/php5/fpm/php-fpm.conf /etc/php5/fpm/php-fpm.conf.old
 sudo cp $SCRIPT_PATH/config/php/php-fpm.conf /etc/php5/fpm/php-fpm.conf
 
-#remove default www pool
 # If sSMTP is installed, modify the php.ini to sendmail using sSMTP.
 if [ "$use_sstmp" = "y" ] ; then
   sudo sed --in-place=.old \
     's,;sendmail_path =,sendmail_path = /usr/bin/ssmtp -t,g' \
     /etc/php5/fpm/php.ini
 fi
+
+# Remove default user pool, php-fpm won't
+# start without a user pool so it will only
+# startup when we add a first user.
 sudo rm /etc/php5/fpm/pool.d/www.conf
 
 ###----------------------------------------###
