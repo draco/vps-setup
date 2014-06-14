@@ -86,7 +86,7 @@ sudo sed -i "s/USERNAME/$username/g" /etc/nginx/sites-available/$username-$domai
 sudo sed -i "s/DOMAIN/$domain/g" /etc/nginx/sites-available/$username-$domain.conf
 
 #create local nginx.conf as the user
-sudo su - $username -c "touch ~/www/$domain/nginx.conf"
+sudo su - $username -c "touch ~/www/nginx.conf"
 
 #enable site
 sudo ln -s /etc/nginx/sites-available/$username-$domain.conf /etc/nginx/sites-enabled/$username-$domain.conf
