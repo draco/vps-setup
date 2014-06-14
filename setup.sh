@@ -136,6 +136,15 @@ if [ "$use_memcached" = "y" ]; then
 fi
 
 ###----------------------------------------###
+###  Install Apticron if sSMTP is used
+###----------------------------------------###
+if [ "$use_sstmp" = "y" ]; then
+  echo "Installing apticron because sSMTP is installed..."
+  sudo aptitude install apticron --quiet --assume-yes
+  sudo sed --in-place=.old 's/EMAIL="root"/EMAIL="'$ssmtp_email'"/g' /etc/apticron/apticron.conf
+fi
+
+###----------------------------------------###
 ###  Install & Configure MySQL
 ###----------------------------------------###
 sudo DEBIAN_FRONTEND=noninteractive aptitude install mysql-server --quiet --assume-yes
