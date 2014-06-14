@@ -47,9 +47,6 @@ sudo apt-get \
   python-software-properties \
   --quiet --assume-yes
 
-### Add DotDeb repository from http://www.dotdeb.org/instructions/
-sudo cp $SCRIPT_PATH/config/sources/dotdeb.list /etc/apt/sources.list.d/dotdeb.list
-wget --quiet --output-document=- http://www.dotdeb.org/dotdeb.gpg | sudo apt-key add -
 if [ "$use_dotdeb" = "y" ] ; then
   ### Add DotDeb repository from http://www.dotdeb.org/instructions/
   sudo cp $SCRIPT_PATH/config/sources/dotdeb.list /etc/apt/sources.list.d/dotdeb.list
