@@ -139,8 +139,10 @@ cd -
 
 sudo /etc/init.d/mysql restart
 
-echo "Root MySQL Password: "
-echo ${MYSQL_ROOT_PASSWORD}
+echo "+------------------------------------+"
+echo "| MySQL Username: root"
+echo "| MySQL Password: $MYSQL_ROOT_PASSWORD"
+echo "+------------------------------------+"
 
 ###----------------------------------------###
 ### Clean up and restart services
