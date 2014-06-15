@@ -2,5 +2,5 @@
 Match group sftponly
   ChrootDirectory %h
   X11Forwarding no
-  AllowTcpForwarding no
+  AllowTcpForwarding yes
   ForceCommand internal-sftp
