@@ -147,6 +147,7 @@ fi
 # start without a user pool so it will only
 # startup when we add a first user.
 sudo rm /etc/php5/fpm/pool.d/www.conf
+sudo /etc/init.d/php5-fpm stop
 
 ###----------------------------------------###
 ###  Configure Nginx
