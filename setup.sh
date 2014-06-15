@@ -65,7 +65,11 @@ fi
 sudo aptitude install openssh-server --quiet --assume-yes
 sudo sed --in-place=.old \
   --expression='s/^PermitRootLogin yes/PermitRootLogin without-password/g' \
+  --expression='s,/usr/lib/openssh/sftp-server,internal-sftp,g' \
   /etc/ssh/sshd_config
+
+echo "Adding sftponly match stanza to sshd_config..."
+sudo tee -a /etc/ssh/sshd_config < $SCRIPT_PATH/config/openssh/sftp.txt
 
 ###----------------------------------------###
 ###  Install & Configure sSMTP
@@ -184,4 +188,6 @@ echo "+------------------------------------+"
 ###----------------------------------------###
 ### Clean up and restart services
 ###----------------------------------------###
+sudo addgroup sftponly
+
 cd ~
