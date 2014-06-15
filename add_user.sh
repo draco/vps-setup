@@ -16,6 +16,7 @@ function randstr {
 read -p "Username to setup: " username
 read -p "Domain for this site: " domain
 read -p "Allow use of sSMTP?: (yN) " allow_smtp
+read -p "Restrict user to sFTP (no ssh)?: (yN)" sftp_only
 
 ###----------------------------------------###
 ###  Confirm Inputs
@@ -24,6 +25,7 @@ echo "You have entered:"
 echo "Username: $username"
 echo "Domain: $domain"
 echo "Use sSMTP: $allow_smtp"
+echo "Restrict to sFTP: $sftp_only"
 read -p "Are you 100% sure this is correct?: (yN)" confirmgo
 
 if [ "$confirmgo" != "y" ] ; then
@@ -77,10 +79,10 @@ sudo cp $SCRIPT_PATH/config/nginx/user.conf /etc/nginx/sites-available/$username
 sudo sed -i "s/USERNAME/$username/g" /etc/nginx/sites-available/$username-$domain.conf
 sudo sed -i "s/DOMAIN/$domain/g" /etc/nginx/sites-available/$username-$domain.conf
 
-#create local nginx.conf as the user
+# Create local nginx.conf as the user
 sudo su - $username -c "touch ~/www/nginx.conf"
 
-#enable site
+# Enable site
 sudo ln -s /etc/nginx/sites-available/$username-$domain.conf /etc/nginx/sites-enabled/$username-$domain.conf
 
 sudo /etc/init.d/nginx restart
