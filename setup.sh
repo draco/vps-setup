@@ -16,6 +16,12 @@ use_memcached="y"
 SCRIPT_PATH=$( cd $(dirname $0) ; pwd -P )
 readonly SCRIPT_PATH
 
+TOTAL_MEMORY=$(free -m | awk '/^Mem:/{print $2}')M
+readonly TOTAL_MEMORY
+
+HAS_SWAP=$(free -m | awk '/^Swap:/{print $2}')
+readonly HAS_SWAP
+
 if [ -z "$update_system" ]; then
   read -p "Update system? (yN) " update_system
 fi
@@ -30,6 +36,11 @@ fi
 
 if [ -z "$use_sstmp" ]; then
   read -p "Use sSMTP (will also install apticron)? (yN) " use_sstmp
+fi
+
+# This shouldn't be set with a default.
+if [ "$HAS_SWAP" -eq 0 ]; then
+  read -p "Setup swap (size: $TOTAL_MEMORY)? (yN) " use_swap
 fi
 
 if [ "$use_sstmp" = "y" ] ; then
@@ -57,6 +68,18 @@ sudo aptitude install expect git curl  --quiet --assume-yes
 
 if [ "$update_system" = "y" ] ; then
   sudo aptitude upgrade --quiet --assume-yes
+fi
+
+###----------------------------------------###
+### Configure swapfile
+###----------------------------------------###
+if [ "$use_swap" = "y" ]; then
+  echo "Configuring swapfile for use..."
+  sudo fallocate -l $TOTAL_MEMORY /swapfile
+  sudo chmod 600 /swapfile
+  sudo mkswap /swapfile
+  sudo swapon /swapfile
+  echo "/swapfile    none    swap    sw    0    0" | sudo tee -a /etc/fstab
 fi
 
 ###----------------------------------------###
