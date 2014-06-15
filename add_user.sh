@@ -16,7 +16,7 @@ function randstr {
 read -p "Username to setup: " username
 read -p "Domain for this site: " domain
 read -p "Allow use of sSMTP?: (yN) " allow_smtp
-read -p "Restrict user to sFTP (no ssh)?: (yN)" sftp_only
+read -p "Restrict user to sFTP (no ssh)?: (yN) " sftp_only
 
 ###----------------------------------------###
 ###  Confirm Inputs
@@ -26,7 +26,7 @@ echo "Username: $username"
 echo "Domain: $domain"
 echo "Use sSMTP: $allow_smtp"
 echo "Restrict to sFTP: $sftp_only"
-read -p "Are you 100% sure this is correct?: (yN)" confirmgo
+read -p "Are you 100% sure this is correct?: (yN) " confirmgo
 
 if [ "$confirmgo" != "y" ] ; then
     echo "Better try again!"
