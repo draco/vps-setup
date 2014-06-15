@@ -49,11 +49,11 @@ if [ "$use_sstmp" = "y" ] ; then
   read -s -p "GMail password: " ssmtp_pass
 fi
 
-echo "Starting installation..."
-
 ###----------------------------------------###
 ###  Update and upgrade the OS
 ###----------------------------------------###
+echo "Updating and upgrading the OS..."
+
 sudo apt-get update
 sudo apt-get install aptitude python-software-properties --quiet --assume-yes
 
