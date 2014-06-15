@@ -27,8 +27,7 @@ echo "You have entered:"
 echo "Username: $username"
 echo "Domain: $domain"
 echo "Use sSMTP: $allow_smtp"
-echo "Are you 100% sure this is correct? (yN)"
-read confirmgo
+read -p "Are you 100% sure this is correct?: (yN)" confirmgo
 
 if [ "$confirmgo" != "y" ] ; then
     echo "Better try again!"
