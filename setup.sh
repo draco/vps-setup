@@ -23,24 +23,24 @@ HAS_SWAP=$(free -m | awk '/^Swap:/{print $2}')
 readonly HAS_SWAP
 
 if [ -z "$update_system" ]; then
-  read -p "Update system? (yN) " update_system
+  read -p "Update system? [y/N] " update_system
 fi
 
 if [ -z "$use_dotdeb" ]; then
-  read -p "Use DotDeb (for nginx/php5/mysql)? (yN) " use_dotdeb
+  read -p "Use DotDeb (for nginx/php5/mysql)? [y/N] " use_dotdeb
 fi
 
 if [ -z "$use_memcached" ]; then
-  read -p "Use memcached? (yN) " use_memcached
+  read -p "Use memcached? [y/N] " use_memcached
 fi
 
 if [ -z "$use_sstmp" ]; then
-  read -p "Use sSMTP (will also install apticron)? (yN) " use_sstmp
+  read -p "Use sSMTP (will also install apticron)? [y/N] " use_sstmp
 fi
 
 # This shouldn't be set with a default.
 if [ "$HAS_SWAP" -eq 0 ]; then
-  read -p "Setup swap (size: $TOTAL_MEMORY)? (yN) " use_swap
+  read -p "Setup swap (size: $TOTAL_MEMORY)? [y/N] " use_swap
 fi
 
 if [ "$use_sstmp" = "y" ] ; then
@@ -215,4 +215,4 @@ echo "+------------------------------------+"
 ###----------------------------------------###
 sudo addgroup sftponly
 
-cd ~
+d ~
