@@ -4,10 +4,7 @@
 
 # To start
 ```
-get --no-check-certificate https://github.com/draco/vps-setup/archive/debian-mysql.zip
-unzip debian-mysql.zip
-cd *debian-mysql
-./setup.sh
+get --no-check-certificate https://github.com/draco/vps-setup/archive/debian-mysql.zip; unzip debian-mysql.zip; cd *debian-mysql;  ./setup.sh
 ```
 
 # Scripts available
