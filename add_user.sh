@@ -104,11 +104,24 @@ if [ "$allow_smtp" = "y" ]; then
 fi
 
 ###----------------------------------------###
-### Setting up for sFTP
+### sFTP configuration
 ###----------------------------------------###
-echo "Adding $username to sftponly group..."
-sudo usermod --append --groups sftponly $username
-sudo chown root:sftponly /home/$username
+if [ "$sftp_only" = "y" ]; then
+  echo "Setting up $username sFTP chroot..."
+  # Assumes home directory is /home, not sure how to generate
+  # it dynamically and reliably.
+  sudo chown $username:sftponly --recursive /home/$username/www/
+  sudo chown root:root /home/$username/
+  sudo chmod 755 /home/$username
+
+  echo "Denying $username shell access..."
+  sudo usermod --shell=/bin/false \
+    --home=/home/$username/ \
+    $username
+
+  echo "Adding $username to sftponly group..."
+  sudo usermod --append --groups sftponly $username
+fi
 
 ###----------------------------------------###
 ###  Output details for admin
