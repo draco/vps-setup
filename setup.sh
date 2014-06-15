@@ -93,6 +93,7 @@ sudo sed --in-place=.old \
 
 echo "Adding sftponly match stanza to sshd_config..."
 sudo tee -a /etc/ssh/sshd_config < $SCRIPT_PATH/config/openssh/sftp.txt
+sudo addgroup sftponly
 
 sudo /etc/init.d/ssh restart
 
@@ -210,10 +211,5 @@ echo "+------------------------------------+"
 echo "| MySQL Username: root"
 echo "| MySQL Password: $MYSQL_ROOT_PASSWORD"
 echo "+------------------------------------+"
-
-###----------------------------------------###
-### Clean up and restart services
-###----------------------------------------###
-sudo addgroup sftponly
 
 cd ~
