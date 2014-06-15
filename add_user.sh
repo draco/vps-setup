@@ -36,7 +36,10 @@ echo "Ok, here we go!"
 ###  Create User account
 ###----------------------------------------###
 password=$(randstr 36)
-sudo useradd -m -p $(perl -e 'print crypt($ARGV[0], "password")' $password) $username
+sudo useradd --create-home \
+  --password=$(perl -e 'print crypt($ARGV[0], "password")' $password) \
+  --shell=/bin/bash \
+  $username
 echo "Created new username with username \"$username\""
 
 #Create www folder and log folders
