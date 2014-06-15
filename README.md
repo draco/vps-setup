@@ -27,3 +27,8 @@ This script will:
 - Setup a PHP pool (each user runs php separately for security)
 - Create a MySQL User and Database
 - Create an nginx server block for their domain
+
+# To-do
+- Add `remove_user.sh`.
+- Add `set_wordpress.sh`.
+- Split the `.sh` files up for modularity.
