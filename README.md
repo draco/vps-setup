@@ -35,7 +35,7 @@ This script will:
 - Setup a PHP pool (each user runs php separately for security).
 - Create a MySQL user and database.
 - Create an nginx server block for their domain, supports wildcard sub-domains.
- - `sub.domain.com` will point to `/home/$username/www/sub.domain.com/public_html`.
+ - `sub.domain.com` will map to `/home/$username/www/sub.domain.com/public_html/`.
 
 # To-do
 - Add `remove_user.sh`.
