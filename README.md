@@ -2,6 +2,14 @@
 - Only ever tested on Debian 7.5.
 - This script assumes you are running it on a *new* server.
 
+# To start
+```
+get --no-check-certificate https://github.com/draco/vps-setup/archive/debian-mysql.zip
+unzip debian-mysql.zip
+cd *debian-mysql
+./setup.sh
+```
+
 # Scripts available
 
 ## `setup.sh`
