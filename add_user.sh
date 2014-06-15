@@ -108,9 +108,15 @@ if [ "$allow_smtp" = "y" ]; then
 fi
 
 ###----------------------------------------###
+### Setting up for sFTP
+###----------------------------------------###
+echo "Adding $username to sftponly group..."
+sudo usermod --append --groups sftponly $username
+sudo chown root:sftponly /home/$username
+
+###----------------------------------------###
 ###  Output details for admin
 ###----------------------------------------###
-
 echo "+------------------------------------+"
 echo "| Account Username: $username"
 echo "| Account Password: $password"
@@ -118,3 +124,4 @@ echo "+------------------------------------+"
 echo "| MySQL Username: $db_user"
 echo "| MySQL Password: $db_pass"
 echo "+------------------------------------+"
+
