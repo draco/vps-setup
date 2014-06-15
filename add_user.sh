@@ -50,12 +50,47 @@ mkdir -p logs/nginx;
 "
 
 ###----------------------------------------###
+### sFTP configuration
+###----------------------------------------###
+if [ "$sftp_only" = "y" ]; then
+  echo "Setting up $username sFTP chroot..."
+
+  # Assumes home directory is /home, not sure how to generate
+  # it dynamically and reliably.
+  sudo chown $username:sftponly --recursive /home/$username/www/
+  sudo chown root:root /home/$username/
+  sudo chmod 755 /home/$username
+
+  echo "Denying $username shell access..."
+  sudo usermod --shell=/bin/false \
+    --home=/home/$username/ \
+    $username
+
+  echo "Adding $username to sftponly group..."
+  sudo usermod --append --groups sftponly $username
+fi
+
+###----------------------------------------###
+### Allow to use sSMTP
+###----------------------------------------###
+if [ "$allow_smtp" = "y" ]; then
+  echo "Adding $username to mail group..."
+  sudo usermod --append --groups mail $username
+fi
+
+###----------------------------------------###
 ###  Create MySQL User
 ###----------------------------------------###
 db_user="${username:0:16}" #limit to first 16 characters - this will need to strip out special characters that are allowed in usernames like "-"
 db_pass=$(randstr 36)
 
 mysql --login-path=root --execute="CREATE USER '$db_user'@'localhost' IDENTIFIED BY '$db_pass';"
+mysql --login-path=root --execute="FLUSH PRIVILEGES;"
+
+###----------------------------------------###
+###  Create MySQL Database
+###----------------------------------------###
+mysql --login-path=root --execute="CREATE DATABASE $db_user;GRANT ALL PRIVILEGES ON $db_user.* TO '$db_user'@'localhost' IDENTIFIED BY '$db_pass';"
 mysql --login-path=root --execute="FLUSH PRIVILEGES;"
 
 ###----------------------------------------###
@@ -86,42 +121,6 @@ sudo su - $username -c "touch ~/www/nginx.conf"
 sudo ln -s /etc/nginx/sites-available/$username-$domain.conf /etc/nginx/sites-enabled/$username-$domain.conf
 
 sudo /etc/init.d/nginx restart
-
-###----------------------------------------###
-###  Create MySQL Database
-###----------------------------------------###
-db_name=$db_user
-
-mysql --login-path=root --execute="CREATE DATABASE $db_name;GRANT ALL PRIVILEGES ON $db_name.* TO '$db_user'@'localhost' IDENTIFIED BY '$db_pass';"
-mysql --login-path=root --execute="FLUSH PRIVILEGES;"
-
-###----------------------------------------###
-### Allow to use sSMTP
-###----------------------------------------###
-if [ "$allow_smtp" = "y" ]; then
-  echo "Adding $username to mail group..."
-  sudo usermod --append --groups mail $username
-fi
-
-###----------------------------------------###
-### sFTP configuration
-###----------------------------------------###
-if [ "$sftp_only" = "y" ]; then
-  echo "Setting up $username sFTP chroot..."
-  # Assumes home directory is /home, not sure how to generate
-  # it dynamically and reliably.
-  sudo chown $username:sftponly --recursive /home/$username/www/
-  sudo chown root:root /home/$username/
-  sudo chmod 755 /home/$username
-
-  echo "Denying $username shell access..."
-  sudo usermod --shell=/bin/false \
-    --home=/home/$username/ \
-    $username
-
-  echo "Adding $username to sftponly group..."
-  sudo usermod --append --groups sftponly $username
-fi
 
 ###----------------------------------------###
 ###  Output details for admin
