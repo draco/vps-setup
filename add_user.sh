@@ -13,7 +13,6 @@ function randstr {
 ###----------------------------------------###
 ###  Prompt User
 ###----------------------------------------###
-
 read -p "Username to setup: " username
 read -p "Domain for this site: " domain
 read -p "Allow use of sSMTP?: (yN) " allow_smtp
@@ -21,8 +20,6 @@ read -p "Allow use of sSMTP?: (yN) " allow_smtp
 ###----------------------------------------###
 ###  Confirm Inputs
 ###----------------------------------------###
-
-# Confirm inputed information
 echo "You have entered:"
 echo "Username: $username"
 echo "Domain: $domain"
@@ -38,7 +35,6 @@ echo "Ok, here we go!"
 ###----------------------------------------###
 ###  Create User account
 ###----------------------------------------###
-
 password=$(randstr 36)
 sudo useradd -m -p $(perl -e 'print crypt($ARGV[0], "password")' $password) $username
 echo "Created new username with username \"$username\""
@@ -51,7 +47,6 @@ mkdir -p logs/nginx;
 ###----------------------------------------###
 ###  Create MySQL User
 ###----------------------------------------###
-
 db_user="${username:0:16}" #limit to first 16 characters - this will need to strip out special characters that are allowed in usernames like "-"
 db_pass=$(randstr 36)
 
@@ -67,14 +62,11 @@ sudo sed -i "s/USERNAME/$username/g" /etc/php5/fpm/pool.d/$username.conf
 
 sudo /etc/init.d/php5-fpm restart
 
-### Begin Domain Specific Configuration
-
 ###----------------------------------------###
 ###  Configure NGINX Host
 ###----------------------------------------###
 
 # Create virtual host
-
 sudo su - $username -c "cd ~/www && mkdir -p $domain/public_html;
 echo 'It works!' > $domain/public_html/index.html"
 
@@ -93,7 +85,6 @@ sudo /etc/init.d/nginx restart
 ###----------------------------------------###
 ###  Create MySQL Database
 ###----------------------------------------###
-
 db_name=$db_user
 
 mysql --login-path=root --execute="CREATE DATABASE $db_name;GRANT ALL PRIVILEGES ON $db_name.* TO '$db_user'@'localhost' IDENTIFIED BY '$db_pass';"
@@ -124,4 +115,3 @@ echo "+------------------------------------+"
 echo "| MySQL Username: $db_user"
 echo "| MySQL Password: $db_pass"
 echo "+------------------------------------+"
-
