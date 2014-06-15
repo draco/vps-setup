@@ -71,6 +71,8 @@ sudo sed --in-place=.old \
 echo "Adding sftponly match stanza to sshd_config..."
 sudo tee -a /etc/ssh/sshd_config < $SCRIPT_PATH/config/openssh/sftp.txt
 
+sudo /etc/init.d/ssh restart
+
 ###----------------------------------------###
 ###  Install & Configure sSMTP
 ###----------------------------------------###
