@@ -18,7 +18,7 @@ read -p "Domain for this site: " domain
 read -p "Allow use of sSMTP?: [y/N] " allow_smtp
 read -p "Restrict user to sFTP (no ssh)?: [y/N] " sftp_only
 
-if [ "$sftponly" != 'y' ]; then
+if [ "$sftp_only" != "y" ]; then
   read -p "Add user to sudo?: [y/N] " add_sudo
 fi
 
@@ -31,7 +31,7 @@ echo "Domain: $domain"
 echo "Use sSMTP: $allow_smtp"
 echo "Restrict to sFTP: $sftp_only"
 
-if [ "$sftponly" != 'y' ]; then
+if [ "$sftp_only" != "y" ]; then
   echo "Add user to sudo: $add_sudo"
 fi
 
