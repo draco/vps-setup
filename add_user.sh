@@ -26,10 +26,17 @@ fi
 ###----------------------------------------###
 ###  Prompt User
 ###----------------------------------------###
+echo "Hello, beginning setup now."
+echo "Some questions first..."
+
 read -p "Username to setup: " username
 read -p "Domain for this site: " domain
 read -p "Allow use of sSMTP?: [y/N] " allow_smtp
 read -p "Restrict user to sFTP (no ssh)?: [y/N] " sftp_only
+
+if [ "$sftponly" != 'y']; then
+  read -p "Add user to sudo?: [y/N] " add_sudo
+fi
 
 ###----------------------------------------###
 ###  Confirm Inputs
@@ -39,6 +46,11 @@ echo "Username: $username"
 echo "Domain: $domain"
 echo "Use sSMTP: $allow_smtp"
 echo "Restrict to sFTP: $sftp_only"
+
+if [ "$sftponly" != 'y']; then
+  echo "Add user to sudo: $add_sudo"
+fi
+
 read -p "Are you 100% sure this is correct?: [y/N] " confirmgo
 
 if [ "$confirmgo" != "y" ] ; then
@@ -81,6 +93,14 @@ if [ "$sftp_only" = "y" ]; then
 
   echo "Adding $username to sftponly group..."
   sudo usermod --append --groups sftponly $username
+fi
+
+###----------------------------------------###
+### Add user to sudo
+###----------------------------------------###
+if [ "$add_sudo" = 'y' ]; then
+  echo "Adding user to sudo group..."
+  sudo usermod --append --groups sudo $username
 fi
 
 ###----------------------------------------###
