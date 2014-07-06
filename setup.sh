@@ -12,13 +12,67 @@ use_memcached="y"
 ###----------------------------------------###
 ###  Do some simple checks first
 ###----------------------------------------###
-if [ ! -e /etc/debian_version ]; then
-  echo "ERROR: Run this script on Debian-based systems only."
-  exit 1
-fi
+all_clean="y"
 
-if [[ $EUID -ne 0 ]]; then
-  echo "ERROR: Run this script as the root user only."
+function ok() {
+  echo 'OK' | sed $'s/OK/\e[1;32m&\e[0m/'
+}
+
+function fail() {
+  echo 'FAILED' | sed $'s/FAILED/\e[1;31m&\e[0m/'
+  echo ""
+  echo "Please fix the failed issue and run this script again."
+  echo ""
+  exit 1
+}
+
+function confirm() {
+  echo -n " - $1"
+  test $2 && ok || fail
+}
+
+function is_installed() {
+  echo -n " - $1: "
+  test $(dpkg-query -W -f='${Status}' $1 2>/dev/null | grep -c "ok installed") \
+    -eq 0 && will_install || skip_install
+}
+
+function will_install() {
+  echo 'NOT INSTALLED'
+}
+
+function skip_install() {
+  all_clean="n"
+  echo 'INSTALLED' | sed $'s/INSTALLED/\e[1;32m&\e[0m/'
+}
+
+echo ""
+echo "In order to ensure things work as expected, we need to run some checks
+first:"
+echo ""
+
+confirm "Is Debian-based system: " "-e /etc/debian_version"
+confirm "Run as root: " "$EUID -eq 0"
+
+echo ""
+echo "Now, this script will look for installed packages so it won't overwrite
+any existing configurations:"
+echo ""
+
+is_installed "mysql-server"
+is_installed "nginx"
+is_installed "php5-fpm"
+is_installed "ssmtp"
+
+echo ""
+if [ "$all_clean" = "y" ]; then
+  echo "Congrats, seems like a new server, proceeding to setup..."
+else
+  echo "Seems like you may have some (or all) packages already installed,
+because of the way packages are configured to work together, this script does
+not encourage installing over a partially configured server and will now exit.
+Try running this script again on a freshly provisioned server instead."
+  echo ""
   exit 1
 fi
 
