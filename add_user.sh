@@ -69,11 +69,7 @@ if [ "$sftp_only" = "y" ]; then
   sudo chown $username:sftponly --recursive /home/$username/www/
   sudo chown root:root /home/$username/
   sudo chmod 755 /home/$username
-
-  echo "Denying $username shell access..."
-  sudo usermod --shell=/bin/false \
-    --home=/home/$username/ \
-    $username
+  sudo usermod --home=/home/$username/ $username
 
   echo "Adding $username to sftponly group..."
   sudo usermod --append --groups sftponly $username
