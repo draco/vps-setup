@@ -6,7 +6,6 @@
 # each installation.
 update_system="n"
 use_dotdeb="y"
-use_sstmp="y"
 use_memcached="y"
 
 ###----------------------------------------###
@@ -89,7 +88,7 @@ HAS_SWAP=$(free -m | awk '/^Swap:/{print $2}')
 readonly HAS_SWAP
 
 if [ -z "$update_system" ]; then
-  read -p "Update system? [y/N] " update_system
+  read -p "Upgrade system/packages? [y/N] " update_system
 fi
 
 if [ -z "$use_dotdeb" ]; then
@@ -97,11 +96,7 @@ if [ -z "$use_dotdeb" ]; then
 fi
 
 if [ -z "$use_memcached" ]; then
-  read -p "Use memcached? [y/N] " use_memcached
-fi
-
-if [ -z "$use_sstmp" ]; then
-  read -p "Use sSMTP (will also install apticron)? [y/N] " use_sstmp
+  read -p "Install memcached? [y/N] " use_memcached
 fi
 
 # This shouldn't be set with a default.
@@ -109,19 +104,17 @@ if [ "$HAS_SWAP" -eq 0 ]; then
   read -p "Setup swap (size: $TOTAL_MEMORY)? [y/N] " use_swap
 fi
 
-if [ "$use_sstmp" = "y" ] ; then
-  echo "Configuring sSMTP:"
-  read -p "GMail address: " ssmtp_email
-  read -s -p "GMail password: " ssmtp_pass
-fi
+echo "Configuring sSMTP for root account:"
+read -p "GMail address: " ssmtp_email
+read -s -p "GMail password: " ssmtp_pass
 
 ###----------------------------------------###
 ###  Update and upgrade the OS
 ###----------------------------------------###
+echo ""
+echo "You can go for a coffee break now, no more input needed hereon till the
+end of setup."
 echo "Updating and upgrading the OS..."
-
-sudo apt-get update
-sudo apt-get install aptitude python-software-properties --quiet --assume-yes
 
 if [ "$use_dotdeb" = "y" ] ; then
   ### Add DotDeb repository from http://www.dotdeb.org/instructions/
@@ -130,7 +123,7 @@ if [ "$use_dotdeb" = "y" ] ; then
 fi
 
 sudo aptitude update
-sudo aptitude install expect git curl  --quiet --assume-yes
+sudo aptitude install python-software-properties expect git curl  --quiet --assume-yes
 
 if [ "$update_system" = "y" ] ; then
   sudo aptitude upgrade --quiet --assume-yes
@@ -166,24 +159,29 @@ sudo /etc/init.d/ssh restart
 ###----------------------------------------###
 ###  Install & Configure sSMTP
 ###----------------------------------------###
+# For sending email
+# - Will remove exim4 and its dependencies.
+sudo aptitude install ssmtp --quiet --assume-yes
 
-if [ "$use_sstmp" = "y" ] ; then
-  # For sending email
-  # - Will remove exim4 and its dependencies.
-  sudo aptitude install ssmtp --quiet --assume-yes
+sudo mv /etc/ssmtp/ssmtp.conf /etc/ssmtp/ssmtp.conf.old
+sudo cp $SCRIPT_PATH/config/ssmtp/ssmtp.conf /etc/ssmtp/ssmtp.conf
 
-  sudo mv /etc/ssmtp/ssmtp.conf /etc/ssmtp/ssmtp.conf.old
-  sudo cp $SCRIPT_PATH/config/ssmtp/ssmtp.conf /etc/ssmtp/ssmtp.conf
+sudo sed -i "s/USERNAME/$ssmtp_email/g" /etc/ssmtp/ssmtp.conf
+sudo sed -i "s/PASSWORD/$ssmtp_pass/g" /etc/ssmtp/ssmtp.conf
 
-  sudo sed -i "s/USERNAME/$ssmtp_email/g" /etc/ssmtp/ssmtp.conf
-  sudo sed -i "s/PASSWORD/$ssmtp_pass/g" /etc/ssmtp/ssmtp.conf
+# Add root to mail group first.
+sudo chown root:mail /etc/ssmtp/ssmtp.conf
+sudo chmod 640 /etc/ssmtp/ssmtp.conf
 
-  # Add root to mail group first.
-  sudo chown root:mail /etc/ssmtp/ssmtp.conf
-  sudo chmod 640 /etc/ssmtp/ssmtp.conf
+cat $SCRIPT_PATH/motd.txt | mail -s "Email test from VPS" $ssmtp_email
 
-  cat $SCRIPT_PATH/motd.txt | mail -s "Email test from VPS" $ssmtp_email
-fi
+###----------------------------------------###
+###  Install apticron
+###----------------------------------------###
+sudo aptitude install apticron --quiet --assume-yes
+sudo sed --in-place=.old \
+  --expression='s/^EMAIL="root"/EMAIL="'$ssmtp_email'"/g' \
+  /etc/apticron/apticron.conf
 
 ###----------------------------------------###
 ### Install &  Configure PHP5/-FPM
@@ -203,12 +201,9 @@ echo "Importing PHP-FPM config..."
 sudo mv /etc/php5/fpm/php-fpm.conf /etc/php5/fpm/php-fpm.conf.old
 sudo cp $SCRIPT_PATH/config/php/php-fpm.conf /etc/php5/fpm/php-fpm.conf
 
-# If sSMTP is installed, modify the php.ini to sendmail using sSMTP.
-if [ "$use_sstmp" = "y" ] ; then
-  sudo sed --in-place=.old \
-    's,^;sendmail_path =,sendmail_path = /usr/sbin/ssmtp -t,g' \
-    /etc/php5/fpm/php.ini
-fi
+sudo sed --in-place=.old \
+  's,^;sendmail_path =,sendmail_path = /usr/sbin/ssmtp -t,g' \
+  /etc/php5/fpm/php.ini
 
 # Remove default user pool, php-fpm won't
 # start without a user pool so it will only
@@ -241,17 +236,6 @@ sudo /etc/init.d/nginx restart
 ###----------------------------------------###
 if [ "$use_memcached" = "y" ]; then
   sudo aptitude install memcached --quiet --assume-yes
-fi
-
-###----------------------------------------###
-###  Install Apticron if sSMTP is used
-###----------------------------------------###
-if [ "$use_sstmp" = "y" ]; then
-  echo "Installing apticron because sSMTP is installed..."
-  sudo aptitude install apticron --quiet --assume-yes
-  sudo sed --in-place=.old \
-    --expression='s/^EMAIL="root"/EMAIL="'$ssmtp_email'"/g' \
-    /etc/apticron/apticron.conf
 fi
 
 ###----------------------------------------###
