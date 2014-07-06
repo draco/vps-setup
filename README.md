@@ -26,7 +26,7 @@ This script will:
 ## `add_user.sh`
 This script will create:
 - a new user and add to the following groups:
- - `mail` if `ssmtp` is installed.
+ - `mail` if sSMTP is installed.
  - `sftponly` if restricted to sFTP chroot.
  - `sudo` if granted sudo access.
 - a PHP pool (each user runs PHP separately for security).
