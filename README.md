@@ -11,16 +11,15 @@ wget --no-check-certificate https://github.com/draco/vps-setup/archive/debian-my
 
 # Scripts available
 ## `setup.sh`
-**NOTE:** this should _not be executed more than once_ on a server.
 
 This script will:
 - Create a swap file the same size as the memory available (if none is detected).
 - Create a `sftponly` user group.
 - Set `PermitRootLogin without-password` in `sshd_config`.
 - Add DotDeb repository.
-- Install `aptitude`/`git`/`curl`/`python-software-properties`/`expect`.
+- Install `git`/`curl`/`python-software-properties`/`expect`.
 - Install `memcached`.
-- Install `ssmtp` (and `apticron` IFF `ssmtp` is installed).
+- Install `ssmtp` and `apticron`.
 - Install `nginx`, `mysql`, `php5-fpm`.
 
 ## `add_user.sh`
