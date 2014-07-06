@@ -11,24 +11,8 @@ function randstr {
 }
 
 ###----------------------------------------###
-###  Do some simple checks first
-###----------------------------------------###
-if [ ! -e /etc/debian_version ]; then
-  echo "ERROR: Run this script on Debian-based systems only."
-  exit 1
-fi
-
-if [[ $EUID -ne 0 ]]; then
-  echo "ERROR: Run this script as the root user only."
-  exit 1
-fi
-
-###----------------------------------------###
 ###  Prompt User
 ###----------------------------------------###
-echo "Hello, beginning setup now."
-echo "Some questions first..."
-
 read -p "Username to setup: " username
 read -p "Domain for this site: " domain
 read -p "Allow use of sSMTP?: [y/N] " allow_smtp

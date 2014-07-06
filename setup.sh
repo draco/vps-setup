@@ -10,9 +10,21 @@ use_sstmp="y"
 use_memcached="y"
 
 ###----------------------------------------###
+###  Do some simple checks first
+###----------------------------------------###
+if [ ! -e /etc/debian_version ]; then
+  echo "ERROR: Run this script on Debian-based systems only."
+  exit 1
+fi
+
+if [[ $EUID -ne 0 ]]; then
+  echo "ERROR: Run this script as the root user only."
+  exit 1
+fi
+
+###----------------------------------------###
 ### DO NOT EDIT OPTIONS BELOW
 ###----------------------------------------###
-
 SCRIPT_PATH=$( cd $(dirname $0) ; pwd -P )
 readonly SCRIPT_PATH
 
