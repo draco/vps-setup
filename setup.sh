@@ -118,15 +118,15 @@ echo "Updating and upgrading the OS..."
 
 if [ "$use_dotdeb" = "y" ] ; then
   ### Add DotDeb repository from http://www.dotdeb.org/instructions/
-  sudo cp $SCRIPT_PATH/config/sources/dotdeb.list /etc/apt/sources.list.d/dotdeb.list
-  wget --quiet --output-document=- http://www.dotdeb.org/dotdeb.gpg | sudo apt-key add -
+  cp $SCRIPT_PATH/config/sources/dotdeb.list /etc/apt/sources.list.d/dotdeb.list
+  wget --quiet --output-document=- http://www.dotdeb.org/dotdeb.gpg | apt-key add -
 fi
 
-sudo aptitude update
-sudo aptitude install python-software-properties expect git curl  --quiet --assume-yes
+aptitude update
+aptitude install python-software-properties expect git curl  --quiet --assume-yes
 
 if [ "$update_system" = "y" ] ; then
-  sudo aptitude upgrade --quiet --assume-yes
+  aptitude upgrade --quiet --assume-yes
 fi
 
 ###----------------------------------------###
@@ -134,59 +134,59 @@ fi
 ###----------------------------------------###
 if [ "$use_swap" = "y" ]; then
   echo "Configuring swapfile for use..."
-  sudo fallocate -l $TOTAL_MEMORY /swapfile
-  sudo chmod 600 /swapfile
-  sudo mkswap /swapfile
-  sudo swapon /swapfile
-  echo "/swapfile    none    swap    sw    0    0" | sudo tee -a /etc/fstab
+  fallocate -l $TOTAL_MEMORY /swapfile
+  chmod 600 /swapfile
+  mkswap /swapfile
+  swapon /swapfile
+  echo "/swapfile    none    swap    sw    0    0" | tee -a /etc/fstab
 fi
 
 ###----------------------------------------###
 ###  Install & Configure OpenSSH-Server
 ###----------------------------------------###
-sudo aptitude install openssh-server --quiet --assume-yes
-sudo sed --in-place=.old \
+aptitude install openssh-server --quiet --assume-yes
+sed --in-place=.old \
   --expression='s/^PermitRootLogin yes/PermitRootLogin without-password/g' \
   --expression='s,/usr/lib/openssh/sftp-server,internal-sftp,g' \
   /etc/ssh/sshd_config
 
 echo "Adding sftponly match stanza to sshd_config..."
-sudo tee -a /etc/ssh/sshd_config < $SCRIPT_PATH/config/openssh/sftp.txt
-sudo addgroup sftponly
+tee -a /etc/ssh/sshd_config < $SCRIPT_PATH/config/openssh/sftp.txt
+addgroup sftponly
 
-sudo /etc/init.d/ssh restart
+/etc/init.d/ssh restart
 
 ###----------------------------------------###
 ###  Install & Configure sSMTP
 ###----------------------------------------###
 # For sending email
 # - Will remove exim4 and its dependencies.
-sudo aptitude install ssmtp --quiet --assume-yes
+aptitude install ssmtp --quiet --assume-yes
 
-sudo mv /etc/ssmtp/ssmtp.conf /etc/ssmtp/ssmtp.conf.old
-sudo cp $SCRIPT_PATH/config/ssmtp/ssmtp.conf /etc/ssmtp/ssmtp.conf
+mv /etc/ssmtp/ssmtp.conf /etc/ssmtp/ssmtp.conf.old
+cp $SCRIPT_PATH/config/ssmtp/ssmtp.conf /etc/ssmtp/ssmtp.conf
 
-sudo sed -i "s/USERNAME/$ssmtp_email/g" /etc/ssmtp/ssmtp.conf
-sudo sed -i "s/PASSWORD/$ssmtp_pass/g" /etc/ssmtp/ssmtp.conf
+sed -i "s/USERNAME/$ssmtp_email/g" /etc/ssmtp/ssmtp.conf
+sed -i "s/PASSWORD/$ssmtp_pass/g" /etc/ssmtp/ssmtp.conf
 
 # Add root to mail group first.
-sudo chown root:mail /etc/ssmtp/ssmtp.conf
-sudo chmod 640 /etc/ssmtp/ssmtp.conf
+chown root:mail /etc/ssmtp/ssmtp.conf
+chmod 640 /etc/ssmtp/ssmtp.conf
 
 cat $SCRIPT_PATH/motd.txt | mail -s "Email test from VPS" $ssmtp_email
 
 ###----------------------------------------###
 ###  Install apticron
 ###----------------------------------------###
-sudo aptitude install apticron --quiet --assume-yes
-sudo sed --in-place=.old \
+aptitude install apticron --quiet --assume-yes
+sed --in-place=.old \
   --expression='s/^EMAIL="root"/EMAIL="'$ssmtp_email'"/g' \
   /etc/apticron/apticron.conf
 
 ###----------------------------------------###
 ### Install &  Configure PHP5/-FPM
 ###----------------------------------------###
-sudo aptitude install \
+aptitude install \
   php5-common \
   php5-mysql \
   php5-curl \
@@ -198,52 +198,52 @@ sudo aptitude install \
   --quiet --assume-yes
 
 echo "Importing PHP-FPM config..."
-sudo mv /etc/php5/fpm/php-fpm.conf /etc/php5/fpm/php-fpm.conf.old
-sudo cp $SCRIPT_PATH/config/php/php-fpm.conf /etc/php5/fpm/php-fpm.conf
+mv /etc/php5/fpm/php-fpm.conf /etc/php5/fpm/php-fpm.conf.old
+cp $SCRIPT_PATH/config/php/php-fpm.conf /etc/php5/fpm/php-fpm.conf
 
-sudo sed --in-place=.old \
+sed --in-place=.old \
   's,^;sendmail_path =,sendmail_path = /usr/sbin/ssmtp -t,g' \
   /etc/php5/fpm/php.ini
 
 # Remove default user pool, php-fpm won't
 # start without a user pool so it will only
 # startup when we add a first user.
-sudo rm /etc/php5/fpm/pool.d/www.conf
-sudo /etc/init.d/php5-fpm stop
+rm /etc/php5/fpm/pool.d/www.conf
+/etc/init.d/php5-fpm stop
 
 ###----------------------------------------###
 ###  Configure Nginx
 ###----------------------------------------###
-sudo aptitude install nginx --quiet --assume-yes
+aptitude install nginx --quiet --assume-yes
 
 #remove default config
-sudo rm /etc/nginx/sites-enabled/default
+rm /etc/nginx/sites-enabled/default
 
 echo "Importing nginx config..."
-sudo mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.old
-sudo cp $SCRIPT_PATH/config/nginx/nginx.conf /etc/nginx/nginx.conf
+mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.old
+cp $SCRIPT_PATH/config/nginx/nginx.conf /etc/nginx/nginx.conf
 
 echo "Backing up and removing restrictions.conf if it exists..."
-sudo mv /etc/nginx/conf.d/restrictions.conf /etc/nginx/conf.d/restrictions.conf.old
-sudo cp $SCRIPT_PATH/config/nginx/restrictions.conf /etc/nginx/conf.d/restrictions.conf
-sudo cp $SCRIPT_PATH/config/nginx/caches.conf /etc/nginx/conf.d/caches.conf
+mv /etc/nginx/conf.d/restrictions.conf /etc/nginx/conf.d/restrictions.conf.old
+cp $SCRIPT_PATH/config/nginx/restrictions.conf /etc/nginx/conf.d/restrictions.conf
+cp $SCRIPT_PATH/config/nginx/caches.conf /etc/nginx/conf.d/caches.conf
 
 #Restart service
-sudo /etc/init.d/nginx restart
+/etc/init.d/nginx restart
 
 ###----------------------------------------###
 ###  Install Memcached
 ###----------------------------------------###
 if [ "$use_memcached" = "y" ]; then
-  sudo aptitude install memcached --quiet --assume-yes
+  aptitude install memcached --quiet --assume-yes
 fi
 
 ###----------------------------------------###
 ###  Install & Configure MySQL
 ###----------------------------------------###
-sudo DEBIAN_FRONTEND=noninteractive aptitude install mysql-server --quiet --assume-yes
+DEBIAN_FRONTEND=noninteractive aptitude install mysql-server --quiet --assume-yes
 
-sudo cp $SCRIPT_PATH/config/mysql/custom.cnf /etc/mysql/conf.d/custom.cnf
+cp $SCRIPT_PATH/config/mysql/custom.cnf /etc/mysql/conf.d/custom.cnf
 
 # Set MySQL root password
 cd ~
@@ -255,7 +255,7 @@ expect -nocase \"Enter password:\" {send \"$MYSQL_ROOT_PASSWORD\r\"; interact}
 "
 cd -
 
-sudo /etc/init.d/mysql restart
+/etc/init.d/mysql restart
 
 echo "+------------------------------------+"
 echo "| MySQL Username: root"
