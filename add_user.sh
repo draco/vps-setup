@@ -47,14 +47,14 @@ echo "Ok, here we go!"
 ###  Create User account
 ###----------------------------------------###
 password=$(randstr 36)
-sudo useradd --create-home \
+useradd --create-home \
   --password=$(perl -e 'print crypt($ARGV[0], "password")' $password) \
   --shell=/bin/bash \
   $username
 echo "Created new username with username \"$username\""
 
 #Create www folder and log folders
-sudo su - $username -c "cd ~ && mkdir www;
+su - $username -c "cd ~ && mkdir www;
 mkdir -p logs/nginx;
 "
 
@@ -66,21 +66,21 @@ if [ "$sftp_only" = "y" ]; then
 
   # Assumes home directory is /home, not sure how to generate
   # it dynamically and reliably.
-  sudo chown $username:sftponly --recursive /home/$username/www/
-  sudo chown root:root /home/$username/
-  sudo chmod 755 /home/$username
-  sudo usermod --home=/home/$username/ $username
+  chown $username:sftponly --recursive /home/$username/www/
+  chown root:root /home/$username/
+  chmod 755 /home/$username
+  usermod --home=/home/$username/ $username
 
   echo "Adding $username to sftponly group..."
-  sudo usermod --append --groups sftponly $username
+  usermod --append --groups sftponly $username
 fi
 
 ###----------------------------------------###
 ### Add user to sudo
 ###----------------------------------------###
 if [ "$add_sudo" = 'y' ]; then
-  echo "Adding user to sudo group..."
-  sudo usermod --append --groups sudo $username
+  echo "Adding user to group..."
+  usermod --append --groups $username
 fi
 
 ###----------------------------------------###
@@ -88,7 +88,7 @@ fi
 ###----------------------------------------###
 if [ "$allow_smtp" = "y" ]; then
   echo "Adding $username to mail group..."
-  sudo usermod --append --groups mail $username
+  usermod --append --groups mail $username
 fi
 
 ###----------------------------------------###
@@ -110,30 +110,30 @@ mysql --login-path=root --execute="FLUSH PRIVILEGES;"
 ###  Setup PHP Pool
 ###----------------------------------------###
 
-sudo cp $SCRIPT_PATH/config/php/user-pool.conf /etc/php5/fpm/pool.d/$username.conf
-sudo sed -i "s/USERNAME/$username/g" /etc/php5/fpm/pool.d/$username.conf
+cp $SCRIPT_PATH/config/php/user-pool.conf /etc/php5/fpm/pool.d/$username.conf
+sed -i "s/USERNAME/$username/g" /etc/php5/fpm/pool.d/$username.conf
 
-sudo /etc/init.d/php5-fpm restart
+/etc/init.d/php5-fpm restart
 
 ###----------------------------------------###
 ###  Configure NGINX Host
 ###----------------------------------------###
 
 # Create virtual host
-sudo su - $username -c "cd ~/www && mkdir -p $domain/public_html;
+su - $username -c "cd ~/www && mkdir -p $domain/public_html;
 echo 'It works!' > $domain/public_html/index.html"
 
-sudo cp $SCRIPT_PATH/config/nginx/user.conf /etc/nginx/sites-available/$username-$domain.conf
-sudo sed -i "s/USERNAME/$username/g" /etc/nginx/sites-available/$username-$domain.conf
-sudo sed -i "s/DOMAIN/$domain/g" /etc/nginx/sites-available/$username-$domain.conf
+cp $SCRIPT_PATH/config/nginx/user.conf /etc/nginx/sites-available/$username-$domain.conf
+sed -i "s/USERNAME/$username/g" /etc/nginx/sites-available/$username-$domain.conf
+sed -i "s/DOMAIN/$domain/g" /etc/nginx/sites-available/$username-$domain.conf
 
 # Create local nginx.conf as the user
-sudo su - $username -c "touch ~/www/nginx.conf"
+su - $username -c "touch ~/www/nginx.conf"
 
 # Enable site
-sudo ln -s /etc/nginx/sites-available/$username-$domain.conf /etc/nginx/sites-enabled/$username-$domain.conf
+ln -s /etc/nginx/sites-available/$username-$domain.conf /etc/nginx/sites-enabled/$username-$domain.conf
 
-sudo /etc/init.d/nginx restart
+/etc/init.d/nginx restart
 
 ###----------------------------------------###
 ###  Output details for admin
