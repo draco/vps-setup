@@ -2,7 +2,7 @@
 - Only ever tested on Debian 7.5 on:
  - DigitalOcean (Debian 7.0 x32)
  - Vagrant (`config.vm.box = "puphpet/debian75-x32"`)
-- This script assumes you are running it on a **new** server as root.
+- These scripts assume you are running it on a **new** server as root.
 
 # To start
 ```
