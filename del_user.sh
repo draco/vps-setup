@@ -11,23 +11,23 @@ if [ "$please_delete" = "y" ]; then
   mysql --login-path=root --execute="FLUSH PRIVILEGES;"
 
   echo "Removing nginx config..."
-  sudo rm /etc/nginx/sites-available/$username-$domain.conf
-  sudo rm /etc/nginx/sites-enabled/$username-$domain.conf
-  sudo /etc/init.d/nginx restart
+  rm /etc/nginx/sites-available/$username-$domain.conf
+  rm /etc/nginx/sites-enabled/$username-$domain.conf
+  /etc/init.d/nginx restart
 
   echo "Removing PHP-FPM config..."
-  sudo rm /etc/php5/fpm/pool.d/$username.conf
-  sudo /etc/init.d/php5-fpm restart
+  rm /etc/php5/fpm/pool.d/$username.conf
+  /etc/init.d/php5-fpm restart
   if [[ `ps aux | grep -v grep | grep -c php-fpm` -eq 0 ]]; then
-    test_error=$(sudo tail -3 /var/log/php5-fpm.log | head -1)
+    test_error=$(tail -3 /var/log/php5-fpm.log | head -1)
     if [[ `echo $test_error | grep -c  "No pool defined"` -ne 0 ]]; then
       echo "TIP: You need at least a user pool (create by using add_user.sh) to start php5-fpm."
     fi
   fi
 
   echo "Removing user, associated groups and home directory..."
-  sudo chown $username:$username /home/$username/
-  sudo usermod --groups "" $username
-  sudo userdel --remove $username
+  chown $username:$username /home/$username/
+  usermod --groups "" $username
+  userdel --remove $username
 fi
 
