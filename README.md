@@ -1,3 +1,9 @@
+# What this does
+- Setup a very basic nginx/MySQL/PHP5-FPM environment.
+- Setup a simple mail interface with sSMTP.
+- Setup users with mail, sudo and/or sftp-only access.
+- Setup a SWAP file if it doesn't exist.
+
 # Important
 - Only ever tested on Debian 7.5 on:
  - DigitalOcean (Debian 7.0 x32)
@@ -25,10 +31,10 @@ This script will:
 ## `add_user.sh`
 This script will create:
 - a new user and add to the following groups:
- - `mail` if sSMTP is installed.
+ - `mail` if granted sSMTP access.
  - `sftponly` if restricted to sFTP chroot.
  - `sudo` if granted sudo access.
-- a PHP pool (each user runs PHP separately for security).
+- a PHP5-FPM pool (each user runs PHP separately for security).
 - a MySQL user and database:
  - MySQL username and database name are the same as the account username.
 - a nginx server block for their domain.
