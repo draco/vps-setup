@@ -1,8 +1,11 @@
-read -p "Username to delete: " username
-read -p "Main domain associated: " domain
+echo ""
+echo "Deleting a user..."
+echo ""
+read -p "Username: " username
+read -p "Domain name associated: " domain
 
 echo "You have chosen to delete user $username with domain $domain"
-read -p "Are you sure? This cannot be undone: [y/N] " please_delete
+read -p "Are you sure? This cannot be undone [y/N] " please_delete
 
 if [ "$please_delete" = "y" ]; then
   echo "Removing MySQL account..."
