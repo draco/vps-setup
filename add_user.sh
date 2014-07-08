@@ -13,38 +13,57 @@ function randstr {
 ###----------------------------------------###
 ###  Prompt User
 ###----------------------------------------###
-read -p "Username to setup: " username
-read -p "Domain for this site: " domain
-read -p "Allow use of sSMTP?: [y/N] " allow_smtp
-read -p "Restrict user to sFTP (no ssh)?: [y/N] " sftp_only
+echo ""
+echo "Adding a new user..."
+echo ""
+read -p "  Username: " username
 
-if [ "$sftp_only" != "y" ]; then
-  read -p "Add user to sudo?: [y/N] " add_sudo
+if id -u $username  >/dev/null 2>&1; then
+  echo ""
+  echo "Sorry, the username $username is already in use. Because this script
+assumes the same username for all setup, it cannot proceed."
+  echo ""
+  exit 1
+fi
+
+read -p "  Domain name: " domain
+read -p "  Grant user access to ssmtp? [y/N] " allow_smtp
+read -p "  Grant user access to ssh? [y/N] " allow_ssh
+
+if [ "$allow_ssh" = "y" ]; then
+  read -p "  Add user to sudo? [y/N] " allow_sudo
 fi
 
 ###----------------------------------------###
 ###  Confirm Inputs
 ###----------------------------------------###
+echo ""
 echo "You have entered:"
-echo "Username: $username"
-echo "Domain: $domain"
-echo "Use sSMTP: $allow_smtp"
-echo "Restrict to sFTP: $sftp_only"
+echo ""
+echo "  Username: $username"
+echo "  Domain: $domain"
+echo "  Allow ssmtp: $allow_smtp"
+echo "  Allow ssh: $allow_ssh"
 
-if [ "$sftp_only" != "y" ]; then
-  echo "Add user to sudo: $add_sudo"
+if [ "$allow_ssh" = "y" ]; then
+  echo "  Add user to sudo: $allow_sudo"
 fi
 
-read -p "Are you 100% sure this is correct?: [y/N] " confirmgo
+echo ""
+read -p "  Are you 100% sure this is correct? [y/N] " confirmgo
+echo ""
 
 if [ "$confirmgo" != "y" ] ; then
     echo "Better try again!"
     exit 1
 fi
+
+echo ""
 echo "Ok, here we go!"
+echo ""
 
 ###----------------------------------------###
-###  Create User account
+###  Create user account
 ###----------------------------------------###
 password=$(randstr 36)
 useradd --create-home \
@@ -59,9 +78,9 @@ mkdir -p logs/nginx;
 "
 
 ###----------------------------------------###
-### sFTP configuration
+### Restrict ssh access (lock to sftp)
 ###----------------------------------------###
-if [ "$sftp_only" = "y" ]; then
+if [ "$allow_ssh" != "y" ]; then
   echo "Setting up $username sFTP chroot..."
 
   # Assumes home directory is /home, not sure how to generate
@@ -76,11 +95,11 @@ if [ "$sftp_only" = "y" ]; then
 fi
 
 ###----------------------------------------###
-### Add user to sudo
+### Allow sudo access
 ###----------------------------------------###
-if [ "$add_sudo" = 'y' ]; then
+if [ "$allow_sudo" = "y" ]; then
   echo "Adding user to group..."
-  usermod --append --groups $username
+  usermod --append --groups sudo $username
 fi
 
 ###----------------------------------------###
@@ -109,7 +128,6 @@ mysql --login-path=root --execute="FLUSH PRIVILEGES;"
 ###----------------------------------------###
 ###  Setup PHP Pool
 ###----------------------------------------###
-
 cp $SCRIPT_PATH/config/php/user-pool.conf /etc/php5/fpm/pool.d/$username.conf
 sed -i "s/USERNAME/$username/g" /etc/php5/fpm/pool.d/$username.conf
 
@@ -118,8 +136,6 @@ sed -i "s/USERNAME/$username/g" /etc/php5/fpm/pool.d/$username.conf
 ###----------------------------------------###
 ###  Configure NGINX Host
 ###----------------------------------------###
-
-# Create virtual host
 su - $username -c "cd ~/www && mkdir -p $domain/public_html;
 echo 'It works!' > $domain/public_html/index.html"
 
@@ -127,7 +143,6 @@ cp $SCRIPT_PATH/config/nginx/user.conf /etc/nginx/sites-available/$username-$dom
 sed -i "s/USERNAME/$username/g" /etc/nginx/sites-available/$username-$domain.conf
 sed -i "s/DOMAIN/$domain/g" /etc/nginx/sites-available/$username-$domain.conf
 
-# Create local nginx.conf as the user
 su - $username -c "touch ~/www/nginx.conf"
 
 # Enable site
