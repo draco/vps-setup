@@ -4,7 +4,7 @@
 
 # Comment these if you don't want defaults for
 # each installation.
-update_system="n"
+update_system="y"
 use_dotdeb="y"
 use_memcached="y"
 
