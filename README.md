@@ -1,35 +1,49 @@
-VPS Scripts
-==================
+# What this does
+- Setup a very basic nginx/MySQL/PHP5-FPM environment.
+- Setup a simple mail interface with sSMTP.
+- Setup users with mail, sudo and/or sftp-only access.
+- Setup a SWAP file if it doesn't exist.
 
-Originally forked from here: https://github.com/aristath/WordPress-Animalia
+# Important
+- Only ever tested on Debian 7.5 on:
+ - DigitalOcean (Debian 7.0 x32)
+ - Vagrant (`config.vm.box = "puphpet/debian75-x32"`)
+- These scripts assume you are running it on a **new** server as root.
 
-I've created a new repo, as this is not going to remain Wordpress specific. I plan to add scripts to provision node.js sites with nginx as well.
+# To start
+```
+wget --no-check-certificate https://github.com/draco/vps-setup/archive/debian-mysql.zip; unzip debian-mysql.zip; cd *debian-mysql;  ./setup.sh
+```
 
-These scripts are intended to help significantly reduce the time it takes to setup a new VPS, manage it's configuration, and setup new users
+# Scripts available
+## `setup.sh`
 
-Scripts available
-=============
-
-`setup.sh`
-You'll want to run this first to provision a new server. This will install and configure: NGINX, MariaDB, PHP-FPM, and WP-CLI
-
-The MariaDB repo settings are for Ubuntu 12.04 In fact, this has only been tested on Ubuntu 12.04
-
-After running this, test to make sure the MySQL root password generated is working. Sometimes it won't reset via the script.
-
-`mysql_reset.sh`
-If the root MySQL password fails to be setup automatically, you can run this to generate one. This can also be used at anytime to randomly set a root password.
-
-`new_user.sh`
 This script will:
-* Create a new user
-* Setup a PHP pool (each user runs php separately for security)
-* Create a MySQL User and Database
-* Create an nginx server block for their domain
-* Install and configure Wordpress Multisite
+- Create a swap file the same size as the memory available (if none is detected).
+- Create a `sftponly` user group.
+- Set `PermitRootLogin without-password` in `sshd_config`.
+- Add DotDeb repository.
+- Install `git`/`curl`/`python-software-properties`/`expect`.
+- Install `memcached`.
+- Install `ssmtp` and `apticron`.
+- Install `nginx`, `mysql`, `php5-fpm`.
 
-If you're looking for a one shot install everything including Wordpress, be sure to checkout @aristath's Wordpress Animalia script: https://github.com/aristath/WordPress-Animalia
+## `add_user.sh`
+This script will create:
+- a new user and add to the following groups:
+ - `mail` if granted sSMTP access.
+ - `sftponly` if restricted to sFTP chroot.
+ - `sudo` if granted sudo access.
+- a PHP5-FPM pool (each user runs PHP separately for security).
+- a MySQL user and database:
+ - MySQL username and database name are the same as the account username.
+- a nginx server block for their domain.
+ - `sub.domain.com` will map to `/home/$username/www/sub.domain.com/public_html/`.
+ - each user will be mapped to only one domain (and all its subdomains).
 
-Take care,
+## `del_user.sh`
+This script will:
+- Undo all changes made by `add_user.sh`.
 
-Alexander Rohmann
+# To-do
+- Split the `.sh` files up for modularity.
