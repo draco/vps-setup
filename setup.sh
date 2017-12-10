@@ -59,7 +59,7 @@ echo ""
 
 is_installed "mysql-server"
 is_installed "nginx"
-is_installed "php7.1-fpm"
+is_installed "php7.2-fpm"
 is_installed "ssmtp"
 
 echo ""
@@ -181,35 +181,35 @@ sed --in-place=.old \
 ### Install &  Configure PHP7/-FPM
 ###----------------------------------------###
 apt-get install \
-  php7.1-common \
-  php7.1-mysql \
-  php7.1-curl \
-  php7.1-gd \
-  php7.1-cli \
-  php7.1-fpm \
-  php7.1-dev \
-  php7.1-mcrypt \
-  php7.1-json \
-  php7.1-opcache \
-  php7.1-mbstring \
-  php7.1-zip \
-  php7.1-tidy \
-  php7.1-recode \
+  php7.2-common \
+  php7.2-mysql \
+  php7.2-curl \
+  php7.2-gd \
+  php7.2-cli \
+  php7.2-fpm \
+  php7.2-dev \
+  php7.2-mcrypt \
+  php7.2-json \
+  php7.2-opcache \
+  php7.2-mbstring \
+  php7.2-zip \
+  php7.2-tidy \
+  php7.2-recode \
   --quiet --assume-yes
 
 echo "Importing PHP-FPM config..."
-mv /etc/php/7.1/fpm/php-fpm.conf /etc/php/7.1/fpm/php-fpm.conf.old
-cp $SCRIPT_PATH/config/php/php-fpm.conf /etc/php/7.1/fpm/php-fpm.conf
+mv /etc/php/7.2/fpm/php-fpm.conf /etc/php/7.2/fpm/php-fpm.conf.old
+cp $SCRIPT_PATH/config/php/php-fpm.conf /etc/php/7.2/fpm/php-fpm.conf
 
 sed --in-place=.old \
   's,^;sendmail_path =,sendmail_path = /usr/sbin/ssmtp -t,g' \
-  /etc/php/7.1/fpm/php.ini
+  /etc/php/7.2/fpm/php.ini
 
 # Remove default user pool, php-fpm won't
 # start without a user pool so it will only
 # startup when we add a first user.
-rm /etc/php/7.1/fpm/pool.d/www.conf
-/etc/init.d/php7.1-fpm stop
+rm /etc/php/7.2/fpm/pool.d/www.conf
+/etc/init.d/php7.2-fpm stop
 
 ###----------------------------------------###
 ###  Configure Nginx

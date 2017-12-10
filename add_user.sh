@@ -128,10 +128,10 @@ mysql --login-path=root --execute="FLUSH PRIVILEGES;"
 ###----------------------------------------###
 ###  Setup PHP Pool
 ###----------------------------------------###
-cp $SCRIPT_PATH/config/php/user-pool.conf /etc/php/7.1/fpm/pool.d/$username.conf
-sed -i "s/USERNAME/$username/g" /etc/php/7.1/fpm/pool.d/$username.conf
+cp $SCRIPT_PATH/config/php/user-pool.conf /etc/php/7.2/fpm/pool.d/$username.conf
+sed -i "s/USERNAME/$username/g" /etc/php/7.2/fpm/pool.d/$username.conf
 
-/etc/init.d/php7.1-fpm restart
+/etc/init.d/php7.2-fpm restart
 
 ###----------------------------------------###
 ###  Configure NGINX Host

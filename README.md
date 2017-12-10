@@ -1,5 +1,5 @@
 # What this does
-- Setup a very basic nginx/MySQL/PHP7.1-FPM environment.
+- Setup a very basic nginx/MySQL/PHP7.2-FPM environment.
 - Setup a simple mail interface with sSMTP.
 - Setup users with mail, sudo and/or sftp-only access.
 - Setup a SWAP file if it doesn't exist.
@@ -10,7 +10,7 @@
 
 # To start
 ```
-wget --no-check-certificate https://github.com/draco/vps-setup/archive/php7-1-ubuntu.zip; unzip php7-1-ubuntu.zip; cd *php7-1-ubuntu; ./setup.sh
+wget --no-check-certificate https://github.com/draco/vps-setup/archive/php7.2-ubuntu.zip; unzip php7.2-ubuntu.zip; cd *php7.2-ubuntu; ./setup.sh
 ```
 
 # Scripts available
@@ -23,7 +23,7 @@ This script will:
 - Install `git`/`curl`/`python-software-properties`/`expect`.
 - Install `memcached`.
 - Install `ssmtp` and `apticron`.
-- Install `nginx`, `mysql`, `php7.1-fpm`.
+- Install `nginx`, `mysql`, `php7.2-fpm`.
 
 ## `add_user.sh`
 This script will create:
@@ -31,7 +31,7 @@ This script will create:
  - `mail` if granted sSMTP access.
  - `sftponly` if restricted to sFTP chroot.
  - `sudo` if granted sudo access.
-- a PHP7.1-FPM pool (each user runs PHP separately for security).
+- a PHP7.2-FPM pool (each user runs PHP separately for security).
 - a MySQL user and database:
  - MySQL username and database name are the same as the account username.
 - a nginx server block for their domain.
