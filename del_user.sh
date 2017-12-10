@@ -19,12 +19,12 @@ if [ "$please_delete" = "y" ]; then
   /etc/init.d/nginx restart
 
   echo "Removing PHP-FPM config..."
-  rm /etc/php5/fpm/pool.d/$username.conf
-  /etc/init.d/php5-fpm restart
+  rm /etc/php/7.1/fpm/pool.d/$username.conf
+  /etc/init.d/php7.1-fpm restart
   if [[ `ps aux | grep -v grep | grep -c php-fpm` -eq 0 ]]; then
-    test_error=$(tail -3 /var/log/php5-fpm.log | head -1)
+    test_error=$(tail -3 /var/log/php7.1-fpm.log | head -1)
     if [[ `echo $test_error | grep -c  "No pool defined"` -ne 0 ]]; then
-      echo "TIP: You need at least a user pool (create by using add_user.sh) to start php5-fpm."
+      echo "TIP: You need at least a user pool (create by using add_user.sh) to start php7.1-fpm."
     fi
   fi
 

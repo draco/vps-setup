@@ -1,13 +1,11 @@
 # What this does
-- Setup a very basic nginx/MySQL/PHP5-FPM environment.
+- Setup a very basic nginx/MySQL/PHP7.1-FPM environment.
 - Setup a simple mail interface with sSMTP.
 - Setup users with mail, sudo and/or sftp-only access.
 - Setup a SWAP file if it doesn't exist.
 
 # Important
-- Only ever tested on Debian 7.5 on:
- - DigitalOcean (Debian 7.0 x32)
- - Vagrant (`config.vm.box = "puphpet/debian75-x32"`)
+- Tested on Ubuntu 16.04 (server installation)
 - These scripts assume you are running it on a **new** server as root.
 
 # To start
@@ -22,11 +20,10 @@ This script will:
 - Create a swap file the same size as the memory available (if none is detected).
 - Create a `sftponly` user group.
 - Set `PermitRootLogin without-password` in `sshd_config`.
-- Add DotDeb repository.
 - Install `git`/`curl`/`python-software-properties`/`expect`.
 - Install `memcached`.
 - Install `ssmtp` and `apticron`.
-- Install `nginx`, `mysql`, `php5-fpm`.
+- Install `nginx`, `mysql`, `php7.1-fpm`.
 
 ## `add_user.sh`
 This script will create:
@@ -34,7 +31,7 @@ This script will create:
  - `mail` if granted sSMTP access.
  - `sftponly` if restricted to sFTP chroot.
  - `sudo` if granted sudo access.
-- a PHP5-FPM pool (each user runs PHP separately for security).
+- a PHP7.1-FPM pool (each user runs PHP separately for security).
 - a MySQL user and database:
  - MySQL username and database name are the same as the account username.
 - a nginx server block for their domain.
@@ -44,6 +41,3 @@ This script will create:
 ## `del_user.sh`
 This script will:
 - Undo all changes made by `add_user.sh`.
-
-# To-do
-- Split the `.sh` files up for modularity.

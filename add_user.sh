@@ -27,11 +27,11 @@ assumes the same username for all setup, it cannot proceed."
 fi
 
 read -p "  Domain name: " domain
-read -p "  Grant user access to ssmtp? [y/N] " allow_smtp
-read -p "  Grant user access to ssh? [y/N] " allow_ssh
+read -p "  Allow user to send mail? [y/N] " allow_smtp
+read -p "  Allow user to ssh into server? [y/N] " allow_ssh
 
 if [ "$allow_ssh" = "y" ]; then
-  read -p "  Add user to sudo? [y/N] " allow_sudo
+  read -p "  Allow user to use sudo? [y/N] " allow_sudo
 fi
 
 ###----------------------------------------###
@@ -42,11 +42,11 @@ echo "You have entered:"
 echo ""
 echo "  Username: $username"
 echo "  Domain: $domain"
-echo "  Allow ssmtp: $allow_smtp"
-echo "  Allow ssh: $allow_ssh"
+echo "  Allow user to send mail: $allow_smtp"
+echo "  Allow user to ssh: $allow_ssh"
 
 if [ "$allow_ssh" = "y" ]; then
-  echo "  Add user to sudo: $allow_sudo"
+  echo "  Allow user to sudo: $allow_sudo"
 fi
 
 echo ""
@@ -128,10 +128,10 @@ mysql --login-path=root --execute="FLUSH PRIVILEGES;"
 ###----------------------------------------###
 ###  Setup PHP Pool
 ###----------------------------------------###
-cp $SCRIPT_PATH/config/php/user-pool.conf /etc/php5/fpm/pool.d/$username.conf
-sed -i "s/USERNAME/$username/g" /etc/php5/fpm/pool.d/$username.conf
+cp $SCRIPT_PATH/config/php/user-pool.conf /etc/php/7.1/fpm/pool.d/$username.conf
+sed -i "s/USERNAME/$username/g" /etc/php/7.1/fpm/pool.d/$username.conf
 
-/etc/init.d/php5-fpm restart
+/etc/init.d/php7.1-fpm restart
 
 ###----------------------------------------###
 ###  Configure NGINX Host
