@@ -113,11 +113,12 @@ read -p "Press [Enter] to continue"
 
 echo "Updating and upgrading the OS..."
 
-apt-get install -y language-pack-en-base
+apt-get update
+apt-get install language-pack-en-base software-properties-common python-software-properties expect git curl --quiet --assume-yes
 LC_ALL=en_US.UTF-8 add-apt-repository ppa:ondrej/php --yes
 
+## One more time!
 apt-get update
-apt-get install python-software-properties expect git curl --quiet --assume-yes
 
 if [ "$update_system" = "y" ] ; then
   apt-get upgrade --quiet --assume-yes
