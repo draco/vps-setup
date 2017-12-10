@@ -1,1 +1,3 @@
-If you can read this, your mail setup is successful.
+Subject: Test mail from new VPS
+
+Congrats! If you can read this, it means your mail setup on your VPS is successful.

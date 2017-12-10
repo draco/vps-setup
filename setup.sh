@@ -262,4 +262,8 @@ echo "| MySQL Username: root"
 echo "| MySQL Password: $MYSQL_ROOT_PASSWORD"
 echo "+------------------------------------+"
 
+echo "Congratulations, the setup is completed. If the e-mail setup was successful, you
+should receive a test e-mail send to the e-mail address you provided."
+echo "You may now invoke ./add_user.sh to add new users! Have fun!"
+
 cd ~
