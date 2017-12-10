@@ -10,7 +10,7 @@
 
 # To start
 ```
-wget --no-check-certificate https://github.com/draco/vps-setup/archive/master.zip; unzip master.zip; cd *master;  ./setup.sh
+wget --no-check-certificate https://github.com/draco/vps-setup/archive/php7-1-ubuntu.zip; unzip php7-1-ubuntu.zip; cd *php7-1-ubuntu; ./setup.sh
 ```
 
 # Scripts available
