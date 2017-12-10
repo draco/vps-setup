@@ -189,7 +189,6 @@ apt-get install \
   php7.2-cli \
   php7.2-fpm \
   php7.2-dev \
-  php7.2-mcrypt \
   php7.2-json \
   php7.2-opcache \
   php7.2-mbstring \
