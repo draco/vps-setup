@@ -114,7 +114,7 @@ read -p "Press [Enter] to continue"
 echo "Updating and upgrading the OS..."
 
 apt-get install -y language-pack-en-base
-LC_ALL=en_US.UTF-8 add-apt-repository ppa:ondrej/php --assume-yes
+LC_ALL=en_US.UTF-8 add-apt-repository ppa:ondrej/php --yes
 
 apt-get update
 apt-get install python-software-properties expect git curl --quiet --assume-yes
