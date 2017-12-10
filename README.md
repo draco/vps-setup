@@ -12,7 +12,7 @@
 
 # To start
 ```
-wget --no-check-certificate https://github.com/draco/vps-setup/archive/debian-mysql.zip; unzip debian-mysql.zip; cd *debian-mysql;  ./setup.sh
+wget --no-check-certificate https://github.com/draco/vps-setup/archive/master.zip; unzip master.zip; cd *master;  ./setup.sh
 ```
 
 # Scripts available
