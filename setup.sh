@@ -109,6 +109,8 @@ read -s -p "GMail password (use app password if 2FA is enabled): " ssmtp_pass
 echo ""
 echo "You can go for a coffee break now, no more input needed hereon till the
 end of setup."
+read -p "Press [Enter] to continue"
+
 echo "Updating and upgrading the OS..."
 
 apt-get install -y language-pack-en-base
@@ -197,7 +199,7 @@ apt-get install \
 
 echo "Importing PHP-FPM config..."
 mv /etc/php/7.1/fpm/php-fpm.conf /etc/php/7.1/fpm/php-fpm.conf.old
-cp $SCRIPT_PATH/config/php/php-fpm.conf /etc/php7.1/fpm/php-fpm.conf
+cp $SCRIPT_PATH/config/php/php-fpm.conf /etc/php/7.1/fpm/php-fpm.conf
 
 sed --in-place=.old \
   's,^;sendmail_path =,sendmail_path = /usr/sbin/ssmtp -t,g' \
