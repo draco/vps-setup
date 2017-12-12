@@ -235,7 +235,7 @@ cp $SCRIPT_PATH/config/nginx/caches.conf /etc/nginx/conf.d/caches.conf
 ###  Install Memcached
 ###----------------------------------------###
 if [ "$use_memcached" = "y" ]; then
-  apt-get install memcached --quiet --assume-yes
+  apt-get install memcached php-memcached --quiet --assume-yes
 fi
 
 ###----------------------------------------###
