@@ -7,17 +7,18 @@
 # Important
 - Tested on Ubuntu 16.04 (server installation)
 - These scripts assume you are running it on a **new** server as root.
+- **I really only recommend using these scripts with VPS on OpenVZ virtualization to host simple blogs or non-critical apps.**
 
 # To start
 ```
-wget --no-check-certificate https://github.com/draco/vps-setup/archive/php7-2-ubuntu.zip; unzip php7-2-ubuntu.zip; cd *php7-2-ubuntu; ./setup.sh
+wget --no-check-certificate https://github.com/draco/vps-setup/archive/master.zip; unzip master.zip; cd master; ./setup.sh
 ```
 
 # Scripts available
 ## `setup.sh`
 
 This script will:
-- Create a swap file the same size as the memory available (if none is detected).
+- Create a swap file the same size as the memory available (if none is detected but _this does not work on OpenVZ virtualization_).
 - Create a `sftponly` user group.
 - Set `PermitRootLogin without-password` in `sshd_config`.
 - Install `git`/`curl`/`python-software-properties`/`expect`.
