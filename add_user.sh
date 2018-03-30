@@ -27,6 +27,7 @@ assumes the same username for all setup, it cannot proceed."
 fi
 
 read -p "  Domain name: " domain
+read -p "  E-mail address: " email_address
 read -p "  Allow user to send mail? [y/N] " allow_smtp
 read -p "  Allow user to ssh into server? [y/N] " allow_ssh
 
@@ -40,8 +41,9 @@ fi
 echo ""
 echo "You have entered:"
 echo ""
-echo "  Username: $username"
-echo "  Domain: $domain"
+echo "  Username (i.e. draco): $username"
+echo "  Domain (i.e. draco.me): $domain"
+echo "  E-mail address: $email_address"
 echo "  Allow user to send mail: $allow_smtp"
 echo "  Allow user to ssh: $allow_ssh"
 
@@ -136,8 +138,13 @@ sed -i "s/USERNAME/$username/g" /etc/php/7.2/fpm/pool.d/$username.conf
 ###----------------------------------------###
 ###  Configure NGINX Host
 ###----------------------------------------###
-su - $username -c "cd ~/www && mkdir -p $domain/public_html;
-echo 'It works!' > $domain/public_html/index.html"
+su - $username -c "cd ~/www && mkdir -p public_html;
+echo 'It works!' > public_html/index.html"
+
+certbot certonly --nginx \
+  -d $domain -d www.$domain \
+  --email $email_address \
+  --agree-tos \
 
 cp $SCRIPT_PATH/config/nginx/user.conf /etc/nginx/sites-available/$username-$domain.conf
 sed -i "s/USERNAME/$username/g" /etc/nginx/sites-available/$username-$domain.conf
