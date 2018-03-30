@@ -121,7 +121,7 @@ LC_ALL=en_US.UTF-8 add-apt-repository ppa:certbot/certbot --yes
 ## One more time!
 apt-get update
 
-apt-get install python-certbot-nginx
+apt-get install python-certbot-nginx --quiet --assume-yes
 
 if [ "$update_system" = "y" ] ; then
   apt-get upgrade --quiet --assume-yes

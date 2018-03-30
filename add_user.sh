@@ -152,11 +152,9 @@ ln -s /etc/nginx/sites-available/$username-$domain.conf /etc/nginx/sites-enabled
 
 /etc/init.d/nginx restart
 
-certbot --nginx -d $domain -d *.$domain \
+certbot --nginx -d $domain \
   --email $email_address \
   --agree-tos \
-  --preferred-challenges dns-01 \
-  --server https://acme-v02.api.letsencrypt.org/directory
 
 ###----------------------------------------###
 ###  Output details for admin
