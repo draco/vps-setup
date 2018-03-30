@@ -141,6 +141,11 @@ sed -i "s/USERNAME/$username/g" /etc/php/7.2/fpm/pool.d/$username.conf
 su - $username -c "cd ~/www && mkdir -p $domain/public_html;
 echo 'It works!' > $domain/public_html/index.html"
 
+certbot certonly --nginx \
+  -d $domain -d www.$domain \
+  --email $email_address \
+  --agree-tos \
+
 cp $SCRIPT_PATH/config/nginx/user.conf /etc/nginx/sites-available/$username-$domain.conf
 sed -i "s/USERNAME/$username/g" /etc/nginx/sites-available/$username-$domain.conf
 sed -i "s/DOMAIN/$domain/g" /etc/nginx/sites-available/$username-$domain.conf
@@ -151,10 +156,6 @@ su - $username -c "touch ~/www/nginx.conf"
 ln -s /etc/nginx/sites-available/$username-$domain.conf /etc/nginx/sites-enabled/$username-$domain.conf
 
 /etc/init.d/nginx restart
-
-certbot --nginx -d $domain \
-  --email $email_address \
-  --agree-tos \
 
 ###----------------------------------------###
 ###  Output details for admin

@@ -28,6 +28,9 @@ if [ "$please_delete" = "y" ]; then
     fi
   fi
 
+  echo "Remove LetsEncrypt certificates..."
+  certbot revoke --cert-path /etc/letsencrypt/live/$domain/fullchain.pem --delete-after-revoke
+
   echo "Removing user, associated groups and home directory..."
   chown $username:$username /home/$username/
   usermod --groups "" $username
