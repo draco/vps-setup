@@ -138,8 +138,8 @@ sed -i "s/USERNAME/$username/g" /etc/php/7.2/fpm/pool.d/$username.conf
 ###----------------------------------------###
 ###  Configure NGINX Host
 ###----------------------------------------###
-su - $username -c "cd ~/www && mkdir -p $domain/public_html;
-echo 'It works!' > $domain/public_html/index.html"
+su - $username -c "cd ~/www && mkdir -p public_html;
+echo 'It works!' > public_html/index.html"
 
 certbot certonly --nginx \
   -d $domain -d www.$domain \
