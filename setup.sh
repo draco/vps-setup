@@ -116,9 +116,12 @@ echo "Updating and upgrading the OS..."
 apt-get update
 apt-get install language-pack-en-base software-properties-common python-software-properties expect git curl --quiet --assume-yes
 LC_ALL=en_US.UTF-8 add-apt-repository ppa:ondrej/php --yes
+LC_ALL=en_US.UTF-8 add-apt-repository ppa:certbot/certbot --yes
 
 ## One more time!
 apt-get update
+
+apt-get install python-certbot-nginx
 
 if [ "$update_system" = "y" ] ; then
   apt-get upgrade --quiet --assume-yes
