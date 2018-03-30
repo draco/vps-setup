@@ -27,7 +27,7 @@ assumes the same username for all setup, it cannot proceed."
 fi
 
 read -p "  Domain name: " domain
-read -p "  E-mail address " email_address
+read -p "  E-mail address: " email_address
 read -p "  Allow user to send mail? [y/N] " allow_smtp
 read -p "  Allow user to ssh into server? [y/N] " allow_ssh
 
